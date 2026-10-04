@@ -1,0 +1,43 @@
+# Campus Lost & Found
+
+A campus web app where students and staff can report lost or found items, search existing reports, and contact the person who posted them. Each report can include a photo and a pin on a map, so people can identify where an item was lost or found.
+
+## Project goals
+
+- Make lost-and-found posts easier to search than posts in chat or social media feeds.
+- Let signed-in campus users create reports and update their status when an item is returned.
+- Show useful report details, including category, date, location, photo, and map coordinates.
+
+## Planned pages
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Latest reports and links to browse or create a report |
+| `/items` | Search and filter lost/found reports; filters are reflected in the URL |
+| `/items/[id]` | Report details, photo, map location, and contact information |
+| `/report` | Signed-in users create a lost/found report |
+| `/login` | Sign in with a user account |
+| `/register` | Create a user account |
+| `/saved` | Reports saved in the current browser |
+
+## Planned technology
+
+- Next.js App Router and React
+- JavaScript with JSX (`.js` / `.jsx`), following the course starter; no TypeScript or TSX
+- Tailwind CSS
+- Supabase Database (PostgreSQL), Auth, and Storage
+- React Hook Form and Zod for form handling and validation
+- OpenStreetMap with Leaflet for selecting and showing locations
+- Sharp for server-side image resizing and compression
+
+`npm` is the package manager used to install and run the project. It does not determine whether files use JSX or TSX; this project is planned in JavaScript/JSX.
+
+## Data and uploads
+
+Supabase stores user profiles and item reports. Supabase Auth manages sign-in, and Supabase Storage holds compressed report photos. The `items` table stores each photo's storage path plus the report's latitude and longitude. Saved reports are kept in browser `localStorage` for the first version.
+
+The proposed database tables and responsibilities for each member are documented in [member-work-file.md](./member-work-file.md).
+
+## Current status
+
+This repository currently contains the project overview and team plan. The Next.js application source and package scripts have not been scaffolded yet.
