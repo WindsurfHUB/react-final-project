@@ -56,4 +56,6 @@ Record the production URL and the routes/data source used to demonstrate the che
 
 ## Current status
 
-This repository currently contains the project overview and team plan. The Next.js application source and package scripts have not been scaffolded yet, so the checkpoint items above are planned requirements and are not complete.
+The front-end mockup is scaffolded with the App Router. Home, listing, detail, report, login, registration, and saved-items routes are present so the flow can be previewed. Search, forms, map selection, authentication, uploads, and saved items are visual-only and do not save or change data.
+
+The visible item cards use clearly labeled sample content. No real Supabase data is fetched yet, so the Server Component real-data checkpoint remains incomplete. The real data source and mutations will be connected in a later project stage.
