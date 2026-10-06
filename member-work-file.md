@@ -10,19 +10,32 @@ Read this entire file before planning or editing. Then identify the person you a
 
 After they answer, use that member's checklist as your main assignment. Start with the earliest unchecked task they own, inspect the current code and Git status, and report any dependency on another member. Do not take over another member's work or silently change ownership. For shared integration tasks, coordinate with the named owner and keep changes limited to the agreed integration. Mark a checkbox complete only after verifying the change exists and works; never treat a plan or mockup as completed functionality. If the checklist conflicts with the code or a new instruction, explain the mismatch and ask the member before changing the plan.
 
-**Suggested first message:** “I read the project work file. Which member am I working with (Titan, Nick, Pond, or Windsurf), and which unchecked task should I focus on first?”
+When a task produces something another member needs, do not just check it off and move on. Commit and push the verified result to the owner’s branch, then prepare a handoff notice with the recipient, what is ready, branch/commit or PR link, verification performed, and the recipient’s next step. Ask the member to send it in the team's agreed shared channel; do not claim it was sent unless it was. The receiving member should reply `ACCEPTED` after checking it or `BLOCKED` with what is missing. A checkbox alone does not notify anyone.
+
+**Suggested first message:** “I read the project work file. Which member am I working with (Titan, Nick, Pond, or Windsurf), and which unchecked task should I focus on first? I’ll use only that member’s branch.”
 
 ## Git safety rules for AI contributions
 
-The GitHub repository is shared by the whole team. These rules are required to avoid overwriting another member's work:
+The GitHub repository has one long-lived branch per member. Use this mapping:
 
-1. **Use an isolated checkout.** Each member should use their own clone or Git worktree and their own task branch, for example `work/nattakorn-item-filters`. Do not let two people or AIs edit the same working directory at the same time. Switching branches in one shared directory does not isolate uncommitted files.
-2. **Protect existing work.** Before editing or switching branches, inspect `git status`. If there are changes you did not make, stop and tell the member; do not discard, reset, stash, or overwrite them. Never use `git reset --hard`, `git clean`, or a force push as a shortcut.
-3. **Keep changes scoped.** Work only on the assigned checklist item. Stage explicit file paths rather than using `git add .`; review both `git diff` and `git diff --cached` before committing. Do not include another member's changes or `.env.local`/credentials.
-4. **Push a branch, not `main`.** Commit to your own task branch and push only that branch. Open a pull request into `main`; have a teammate review it and resolve conflicts before merging. Do not push directly to `main`, merge another member's branch, or force-push unless the repository owner explicitly requests that exact action.
-5. **Verify before handing off.** Run the relevant build/checks, report what passed and what remains, and give the branch/PR link. Only the agreed integrator should merge reviewed work and deploy it.
+| Member | Nickname | Branch |
+| --- | --- | --- |
+| ภูรินท์ ชัยประสาน | Titan | `titan` |
+| ณภัทร นิรันต์สิทธิรัชต์ | Nick | `nick` |
+| ณัฐกรณ์ แท่นงาม | Pond | `pond` |
+| ธนนรินทร์ สายศรธนานันต์ | Windsurf | `windsurf` |
 
-For a technical guard, the repository owner should protect `main` on GitHub so direct pushes are blocked and changes go through pull requests. If repository settings or the deadline make that impractical, branch names and review instructions are only a team convention, not a hard block; still keep isolated checkouts and have the integrator review and merge one branch at a time. Do not share a single editing checkout as a substitute for branches.
+Follow these safety rules for every AI contribution:
+
+1. **Identify the owner and branch.** Ask which member you are working with if the name/nickname is unclear. Work only on that member's branch from the table; do not create another branch or push to a teammate's branch.
+2. **Use an isolated checkout.** Each member should use their own clone or Git worktree. Do not let two people or AIs edit the same working directory at once. A branch name does not isolate uncommitted files in a shared folder. If another AI is already using that member's branch/checkout, coordinate before editing.
+3. **Protect existing work.** Check `git status` before editing, switching, or syncing. If there are changes you did not make, stop and tell the member; do not discard, reset, stash, or overwrite them. Never use `git reset --hard`, `git clean`, or force push as a shortcut.
+4. **Keep changes scoped.** Work only on the assigned checklist item. Stage explicit file paths instead of `git add .`; review `git diff` and `git diff --cached` before committing. Do not include another member's changes or `.env.local`/credentials.
+5. **Push only to the assigned branch.** Fetch before syncing. If the worktree is clean and the member branch only needs its own latest commits, use a fast-forward update. Commit and push to the exact branch from the table. If Git reports divergence or conflicts, stop and ask the member; never force-push or overwrite remote work.
+6. **Review before integration.** Open a pull request from the member's branch to `main`. The team integrator reviews and merges it; AI contributors do not merge to `main` or deploy unless the owner explicitly asks.
+7. **Verify and hand off.** Run relevant checks, report what passed and what remains, and share the member branch/PR link.
+
+For a technical guard, the repository owner should protect `main` on GitHub so direct pushes are blocked and integration happens through pull requests. Branch rules in this file guide contributors but cannot enforce GitHub permissions by themselves.
 
 ## What is already done
 
@@ -36,6 +49,21 @@ For a technical guard, the repository owner should protect `main` on GitHub so d
 ## Current gap
 
 The current site is a visual mockup. Search, filters, saved items, authentication, report submission, map selection, uploads, and status changes do not yet persist or use Supabase. The real-data Server Component checkpoint is still incomplete: `/items` currently reads sample content from `lib/demo-items.js`.
+
+## Cross-member handoff tracker
+
+Use these statuses: `NOT STARTED` → `IN PROGRESS` → `READY FOR HANDOFF` → `ACCEPTED`; use `BLOCKED` when the receiver cannot continue. These rows start as `NOT STARTED` because the app is currently a mockup. Update only the handoff you own, and include its branch and commit/PR when it becomes ready.
+
+| Handoff | Owner → receiver | Ready when | Status |
+| --- | --- | --- | --- |
+| Supabase schema and real listing/detail query | Titan → Pond | Tables/policies exist, the Server Component returns real rows, and field names/empty states are documented. | NOT STARTED |
+| Report action contract | Titan → Windsurf | `createItem`/`markAsResolved` inputs, auth checks, return values, and error behavior are implemented and verified. | NOT STARTED |
+| Validated report form and map payload | Nick → Windsurf | The form produces validated fields plus location name/latitude/longitude in the agreed shape. | NOT STARTED |
+| Integrated, deployed flow | Windsurf → all members | Auth, report creation, and status update are connected; production build and agreed smoke checks pass. | NOT STARTED |
+
+**Handoff notice template:** `READY FOR HANDOFF — [owner] → [receiver] | [deliverable] | Branch/commit/PR: [link] | Verified: [checks] | Next: [receiver action]`
+
+**Receiver reply:** `ACCEPTED — [what I checked]` or `BLOCKED — [what is missing and who can resolve it]`.
 
 ## Member checklists
 
