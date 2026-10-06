@@ -59,3 +59,16 @@ Record the production URL and the routes/data source used to demonstrate the che
 The front-end mockup is scaffolded with the App Router. Home, listing, detail, report, login, registration, and saved-items routes are present so the flow can be previewed. Search, forms, map selection, authentication, uploads, and saved items are visual-only and do not save or change data.
 
 The visible item cards use clearly labeled sample content. No real Supabase data is fetched yet, so the Server Component real-data checkpoint remains incomplete. The real data source and mutations will be connected in a later project stage.
+
+## Local development
+
+```bash
+npm ci
+npm run dev
+```
+
+Open <http://localhost:3000>. The current visual mockup runs without Supabase credentials because it still uses sample data.
+
+When the Supabase integration is added, copy `.env.example` to `.env.local` and fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from the project dashboard. These are the public project URL and publishable key; keep Row Level Security enabled. Never put a Supabase secret/service-role key in a `NEXT_PUBLIC_` variable or commit it. The mockup does not yet read these variables.
+
+To check a production build locally, run `npm run build`.
