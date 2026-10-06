@@ -38,17 +38,7 @@ Supabase stores user profiles and item reports. Supabase Auth manages sign-in, a
 
 The proposed database tables and responsibilities for each member are documented in [member-work-file.md](./member-work-file.md).
 
-## Day 8 final-project checkpoint
-
-The lecture slides list a 6-point checkpoint, due by 23:59 on the lecture day. Each item is worth 2 points:
-
-- [ ] Deploy a production build to Vercel and confirm its URL opens on another device.
-- [ ] Use the Next.js App Router and have at least two working routes, such as `/items` and `/items/[id]`.
-- [ ] Have at least one Server Component fetch real data from Supabase.
-
-Record the production URL and the routes/data source used to demonstrate the checkpoint once implementation is ready.
-
-## Day 8 implementation and security notes
+## Implementation and security notes
 
 - Use Server Actions for creating a report and marking a report as resolved. Show a real pending state and return form errors without a full-page reload.
 - Protect `/report` with an auth redirect, and check the current user again inside each Server Action before writing data. A route guard improves navigation but does not replace authorization at the data mutation.
