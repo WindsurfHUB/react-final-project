@@ -8,9 +8,9 @@
 
 Read this entire file before planning or editing. Then identify the person you are helping: if the member's name or nickname is not already clear from their message, ask **“Which team member am I working with: Titan (ภูรินท์), Nick (ณภัทร), Pond (ณัฐกรณ์), or Windsurf (ธนนรินทร์)?”** and wait for the answer before changing files.
 
-After they answer, use that member's checklist as your main assignment. Start with the earliest unchecked task they own, inspect the current code and Git status, and report any dependency on another member. Do not take over another member's work or silently change ownership. For shared integration tasks, coordinate with the named owner and keep changes limited to the agreed integration. Mark a checkbox complete only after verifying the change exists and works; never treat a plan or mockup as completed functionality. If the checklist conflicts with the code or a new instruction, explain the mismatch and ask the member before changing the plan.
+After they answer, use that member's checklist as your main assignment. Start with the earliest unchecked task they own, inspect the current code and Git status, and report any dependency on another member. Do not take over another member's work or silently change ownership. For shared integration tasks, coordinate with the named owner and keep changes limited to the agreed integration. Tick a task only after it is implemented, verified, and usable by the next person; do this immediately before committing and pushing the completed work to that member's branch. Leave started, incomplete, or unverified tasks unchecked. If the checklist conflicts with the code or a new instruction, explain the mismatch and ask the member before changing the plan.
 
-When a task produces something another member needs, do not just check it off and move on. Commit and push the verified result to the owner’s branch, then prepare a handoff notice with the recipient, what is ready, branch/commit or PR link, verification performed, and the recipient’s next step. Ask the member to send it in the team's agreed shared channel; do not claim it was sent unless it was. The receiving member should reply `ACCEPTED` after checking it or `BLOCKED` with what is missing. A checkbox alone does not notify anyone.
+If the completed task unblocks another member, include a short handoff notice at the end of your final reply. Give the recipient, what is ready, the branch and commit/PR link, the verification performed, and the next action. This is the message for the member to share with their teammate; do not claim to have notified anyone unless a message was actually sent.
 
 **Suggested first message:** “I read the project work file. Which member am I working with (Titan, Nick, Pond, or Windsurf), and which unchecked task should I focus on first? I’ll use only that member’s branch.”
 
@@ -33,7 +33,7 @@ Follow these safety rules for every AI contribution:
 4. **Keep changes scoped.** Work only on the assigned checklist item. Stage explicit file paths instead of `git add .`; review `git diff` and `git diff --cached` before committing. Do not include another member's changes or `.env.local`/credentials.
 5. **Push only to the assigned branch.** Fetch before syncing. If the worktree is clean and the member branch only needs its own latest commits, use a fast-forward update. Commit and push to the exact branch from the table. If Git reports divergence or conflicts, stop and ask the member; never force-push or overwrite remote work.
 6. **Review before integration.** Open a pull request from the member's branch to `main`. The team integrator reviews and merges it; AI contributors do not merge to `main` or deploy unless the owner explicitly asks.
-7. **Verify and hand off.** Run relevant checks, report what passed and what remains, and share the member branch/PR link.
+7. **Verify and report.** Run relevant checks, tick only the verified completed task, commit/push the task and checkbox together to the member's branch, and report what passed and what remains. Add a handoff notice to the final reply only when another member needs the result.
 
 For a technical guard, the repository owner should protect `main` on GitHub so direct pushes are blocked and integration happens through pull requests. Branch rules in this file guide contributors but cannot enforce GitHub permissions by themselves.
 
@@ -50,20 +50,11 @@ For a technical guard, the repository owner should protect `main` on GitHub so d
 
 The current site is a visual mockup. Search, filters, saved items, authentication, report submission, map selection, uploads, and status changes do not yet persist or use Supabase. The real-data Server Component checkpoint is still incomplete: `/items` currently reads sample content from `lib/demo-items.js`.
 
-## Cross-member handoff tracker
+## Handoff notifications
 
-Use these statuses: `NOT STARTED` → `IN PROGRESS` → `READY FOR HANDOFF` → `ACCEPTED`; use `BLOCKED` when the receiver cannot continue. These rows start as `NOT STARTED` because the app is currently a mockup. Update only the handoff you own, and include its branch and commit/PR when it becomes ready.
+The checkboxes are the progress flags: each AI updates only its assigned member's checklist, and only after that task is verified and ready for another person to use. Push the checkbox update with the work to that member's branch. Do not add a second status tracker or mark another member's task complete.
 
-| Handoff | Owner → receiver | Ready when | Status |
-| --- | --- | --- | --- |
-| Supabase schema and real listing/detail query | Titan → Pond | Tables/policies exist, the Server Component returns real rows, and field names/empty states are documented. | NOT STARTED |
-| Report action contract | Titan → Windsurf | `createItem`/`markAsResolved` inputs, auth checks, return values, and error behavior are implemented and verified. | NOT STARTED |
-| Validated report form and map payload | Nick → Windsurf | The form produces validated fields plus location name/latitude/longitude in the agreed shape. | NOT STARTED |
-| Integrated, deployed flow | Windsurf → all members | Auth, report creation, and status update are connected; production build and agreed smoke checks pass. | NOT STARTED |
-
-**Handoff notice template:** `READY FOR HANDOFF — [owner] → [receiver] | [deliverable] | Branch/commit/PR: [link] | Verified: [checks] | Next: [receiver action]`
-
-**Receiver reply:** `ACCEPTED — [what I checked]` or `BLOCKED — [what is missing and who can resolve it]`.
+When the completed task unblocks another member, include a message like this at the end of the AI reply: `HANDOFF TO [member] — [what is ready] | Branch/commit/PR: [link] | Verified: [checks] | Next: [their task]`. If nobody else needs to act, report the completed work and checks without a handoff message.
 
 ## Member checklists
 
