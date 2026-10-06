@@ -6,11 +6,11 @@
 
 ## Instructions for any AI helping a team member
 
-Read this entire file before planning or editing. Then identify the person you are helping: if the member's name is not already clear from their message, ask **“Which team member am I working with: ภูรินท์, ณภัทร, ณัฐกรณ์, or ธนนรินทร์?”** and wait for the answer before changing files.
+Read this entire file before planning or editing. Then identify the person you are helping: if the member's name or nickname is not already clear from their message, ask **“Which team member am I working with: Titan (ภูรินท์), Nick (ณภัทร), Pond (ณัฐกรณ์), or Windsurf (ธนนรินทร์)?”** and wait for the answer before changing files.
 
 After they answer, use that member's checklist as your main assignment. Start with the earliest unchecked task they own, inspect the current code and Git status, and report any dependency on another member. Do not take over another member's work or silently change ownership. For shared integration tasks, coordinate with the named owner and keep changes limited to the agreed integration. Mark a checkbox complete only after verifying the change exists and works; never treat a plan or mockup as completed functionality. If the checklist conflicts with the code or a new instruction, explain the mismatch and ask the member before changing the plan.
 
-**Suggested first message:** “I read the project work file. Which member am I working with, and which unchecked task should I focus on first?”
+**Suggested first message:** “I read the project work file. Which member am I working with (Titan, Nick, Pond, or Windsurf), and which unchecked task should I focus on first?”
 
 ## Git safety rules for AI contributions
 
@@ -41,7 +41,7 @@ The current site is a visual mockup. Search, filters, saved items, authenticatio
 
 **Priority:** P0 means needed for a usable submission/checkpoint; P1 means finish after P0 if time remains.
 
-### ภูรินท์ ชัยประสาน — Backend
+### ภูรินท์ ชัยประสาน (Titan) — Backend
 
 - [ ] **P0 · Oct 7:** Create/configure the Supabase project and share the required public project URL/key with the team through a safe channel; add placeholder names to `.env.example` and keep real secrets out of Git.
 - [ ] **P0 · Oct 7:** Create the `profiles` and `items` tables from the proposal. Add the foreign keys, required fields, allowed values for `item_type` (`lost`/`found`) and `status` (`open`/`resolved`), and useful indexes.
@@ -50,7 +50,7 @@ The current site is a visual mockup. Search, filters, saved items, authenticatio
 - [ ] **P1 · Oct 8:** Implement or finalize the authenticated `createItem` and `markAsResolved` Server Actions. Re-check the user inside each action before writing; return useful success/error results.
 - [ ] **P0 · Oct 9:** Verify that a Server Component fetches real Supabase data and that unauthorized writes are rejected by the database policies.
 
-### ณัฐกรณ์ แท่นงาม — Frontend
+### ณัฐกรณ์ แท่นงาม (Pond) — Frontend
 
 - [ ] **P0 · Oct 7–8:** Connect `/`, `/items`, and `/items/[id]` to the real report data supplied by ภูรินท์; remove sample-only content from the primary list/detail flow.
 - [ ] **P1 · Oct 8:** Implement working search and category/status filters on `/items`; keep filter values in the URL so a filtered link can be shared or refreshed.
@@ -58,14 +58,14 @@ The current site is a visual mockup. Search, filters, saved items, authenticatio
 - [ ] **P1 · Oct 8–9:** Show item type, category, date, location, image when available, and current status on cards/details. Add loading, empty, and error states where needed.
 - [ ] **P0 · Oct 9:** Check navigation and the home → list → detail flow at desktop and mobile widths; fix issues found during the team walkthrough.
 
-### ณภัทร นิรันต์สิทธิรัชต์ — Frontend
+### ณภัทร นิรันต์สิทธิรัชต์ (Nick) — Frontend
 
 - [ ] **P0 · Oct 7–8:** Turn `/login` and `/register` mockups into usable forms connected to Supabase Auth; show validation, pending, success, and error states.
 - [ ] **P0 · Oct 8:** Finish the `/report` form UI for lost/found type, title, category, description, date, location, photo, and map coordinates. Validate required fields with Zod/React Hook Form in coordination with ธนนรินทร์.
 - [ ] **P1 · Oct 8:** Make the Leaflet/OpenStreetMap picker interactive and pass the selected latitude/longitude and location name to the report form.
 - [ ] **P0 · Oct 9:** Check that form controls are keyboard-usable and layouts work at phone width; fix visible validation and error-state issues.
 
-### ธนนรินทร์ สายศรธนานันต์ — Fullstack
+### ธนนรินทร์ สายศรธนานันต์ (Windsurf) — Fullstack
 
 - [ ] **P0 · Oct 7:** Coordinate Supabase setup and environment variable names with ภูรินท์; confirm the app can run locally using documented setup steps without committing credentials.
 - [ ] **P0 · Oct 8:** Connect ณภัทร’s validated report form and map values to ภูรินท์’s `createItem` Server Action. Show a pending state and display returned field/server errors.
