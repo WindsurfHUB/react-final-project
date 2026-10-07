@@ -3,21 +3,20 @@ import { notFound } from "next/navigation";
 import LocationMap from "../../../components/LocationMap";
 import SiteFooter from "../../../components/SiteFooter";
 import SiteHeader from "../../../components/SiteHeader";
-import { demoItems } from "../../../lib/demo-items";
+import { getItemById } from "../../../lib/items";
 
-export function generateStaticParams() {
-  return demoItems.map((item) => ({ id: item.id }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const item = demoItems.find((entry) => entry.id === id);
+  const { item } = await getItemById(id);
   return { title: item ? `${item.title} | ตามหา` : "ไม่พบประกาศ | ตามหา" };
 }
 
 export default async function ItemDetailPage({ params }) {
   const { id } = await params;
-  const item = demoItems.find((entry) => entry.id === id);
+  const { item, error } = await getItemById(id);
+  if (error) throw new Error(error.message ?? "โหลดประกาศไม่สำเร็จ");
   if (!item) notFound();
 
   return (
@@ -28,7 +27,7 @@ export default async function ItemDetailPage({ params }) {
           <div className="breadcrumb"><Link href="/">หน้าแรก</Link><span>›</span><Link href="/items">รายการประกาศ</Link><span>›</span><span>รายละเอียด</span></div>
         </div>
         <div className="detail-layout">
-          <div className={`detail-photo ${item.tone}`}><span className="badge">{item.type === "found" ? "พบของ" : "ตามหาของ"}</span><span className="item-emoji" aria-hidden="true">{item.emoji}</span></div>
+          <div className={`detail-photo ${item.tone}`}><span className="badge">{item.type === "found" ? "พบของ" : "ตามหาของ"}{item.status === "resolved" ? " · ปิดแล้ว" : ""}</span><span className="item-emoji" aria-hidden="true">{item.emoji}</span></div>
           <div className="detail-content">
             <span className="eyebrow"><span className="eyebrow-dot" /> {item.type === "found" ? "FOUND ITEM" : "LOST ITEM"}</span>
             <h1>{item.title}</h1>
@@ -39,7 +38,7 @@ export default async function ItemDetailPage({ params }) {
               <div className="detail-info-row"><span className="trust-icon">◷</span><span><b>เวลาที่พบ/ทำหาย</b><span>{item.when}</span></span></div>
             </div>
             <LocationMap label={item.location} />
-            <div className="demo-banner">ข้อมูลประกาศนี้เป็นตัวอย่างสำหรับพรีวิว</div>
+            {item.isDemo ? <div className="demo-banner">ข้อมูลประกาศนี้เป็นตัวอย่างสำหรับพรีวิว</div> : null}
           </div>
         </div>
       </main>
