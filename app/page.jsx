@@ -2,10 +2,13 @@ import Link from "next/link";
 import ItemCard from "../components/ItemCard";
 import SiteFooter from "../components/SiteFooter";
 import SiteHeader from "../components/SiteHeader";
-import { demoItems } from "../lib/demo-items";
+import StateMessage from "../components/StateMessage";
+import { getItems } from "../lib/items";
 
-export default function HomePage() {
-  const latestItems = demoItems.slice(0, 3);
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const { items: latestItems, error } = await getItems({ limit: 3 });
 
   return (
     <div className="site-shell">
@@ -44,10 +47,16 @@ export default function HomePage() {
 
         <section className="container section">
           <div className="section-heading">
-            <div><div className="eyebrow">RECENT REPORTS</div><h2>ประกาศล่าสุด</h2><p>ตัวอย่างหน้าตารายการของที่หายและของที่พบ</p></div>
+            <div><div className="eyebrow">RECENT REPORTS</div><h2>ประกาศล่าสุด</h2><p>รายการของที่หายและของที่พบล่าสุด</p></div>
             <Link className="text-link" href="/items">ดูทั้งหมด <span aria-hidden="true">→</span></Link>
           </div>
-          <div className="item-grid">{latestItems.map((item) => <ItemCard key={item.id} item={item} />)}</div>
+          {error ? (
+            <StateMessage icon="!" title="โหลดประกาศไม่สำเร็จ" text="ลองรีเฟรชหน้านี้อีกครั้ง" />
+          ) : latestItems.length === 0 ? (
+            <StateMessage title="ยังไม่มีประกาศ" text="เป็นคนแรกที่ลงประกาศ" action={{ href: "/report", label: "แจ้งประกาศ" }} />
+          ) : (
+            <div className="item-grid">{latestItems.map((item) => <ItemCard key={item.id} item={item} />)}</div>
+          )}
         </section>
 
         <section className="container cta-band">
