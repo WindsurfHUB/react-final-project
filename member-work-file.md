@@ -48,7 +48,7 @@ For a technical guard, the repository owner should protect `main` on GitHub so d
 
 ## Current gap
 
-The current site is a visual mockup. Search, filters, saved items, authentication, report submission, map selection, uploads, and status changes do not yet persist or use Supabase. The real-data Server Component checkpoint is still incomplete: `/items` currently reads sample content from `lib/demo-items.js`.
+The home, `/items`, and `/items/[id]` pages now query Supabase, and `/login` and `/register` use email/password Auth forms. `/report` is still a preview and is not connected to `createItem`; its map is static. Search/URL filters, saved items, and photo upload are not implemented. The owner-only resolve control and `/report` sign-in guard are in the Windsurf branch and still need an authenticated-flow check. CMU single sign-on is not implemented.
 
 ## Handoff notifications
 
@@ -86,7 +86,7 @@ When the completed task unblocks another member, include a message like this at 
 
 ### ธนนรินทร์ สายศรธนานันต์ (Windsurf) — Fullstack
 
-- [ ] **P0 · Oct 7:** Coordinate Supabase setup and environment variable names with ภูรินท์; confirm the app can run locally using documented setup steps without committing credentials.
+- [x] **P0 · Oct 7:** Coordinate Supabase setup and environment variable names with ภูรินท์; confirm the app can run locally using documented setup steps without committing credentials.
 - [ ] **P0 · Oct 8:** Connect ณภัทร’s validated report form and map values to ภูรินท์’s `createItem` Server Action. Show a pending state and display returned field/server errors.
 - [ ] **P1 · Oct 8:** Implement the photo flow: validate size/type, compress with Sharp on the server, upload to the Supabase Storage bucket, and store the resulting path on the report.
 - [ ] **P1 · Oct 8–9:** Wire sign-in protection for `/report` and connect the report owner’s resolve control to `markAsResolved`; coordinate authorization checks with ภูรินท์.

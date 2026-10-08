@@ -186,6 +186,8 @@ textarea.form-control { min-height: 88px; resize: vertical; }
 .auth-message { margin: 0 0 15px; padding: 10px 12px; border-radius: 10px; font-size: 11px; line-height: 1.6; }
 .auth-message-error { background: #fff0ed; color: #923c2c; }
 .auth-message-success { background: var(--green-soft); color: var(--green); }
+.resolve-action { display: grid; justify-items: start; gap: 9px; margin-top: 20px; }
+.resolve-action .auth-message { margin: 0; }
 .auth-switch { margin-top: 17px; color: var(--muted); text-align: center; font-size: 10px; }
 .auth-switch a { color: var(--green); font-weight: 800; }
 .footer { padding: 28px 0; border-top: 1px solid var(--line); background: #fff; }

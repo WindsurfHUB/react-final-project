@@ -46,9 +46,9 @@ The proposed database tables and responsibilities for each member are documented
 
 ## Current status
 
-The front-end mockup is scaffolded with the App Router. Home, listing, detail, report, login, registration, and saved-items routes are present so the flow can be previewed. Search, forms, map selection, authentication, uploads, and saved items are visual-only and do not save or change data.
+The home, listing, and detail pages query report data from Supabase. The login and registration forms use Supabase email/password authentication, and signed-in owners can mark their reports as resolved. The report form is still a preview and is not yet connected to the `createItem` Server Action.
 
-The visible item cards use clearly labeled sample content. No real Supabase data is fetched yet, so the Server Component real-data checkpoint remains incomplete. The real data source and mutations will be connected in a later project stage.
+Search and URL filters, saved reports, interactive map selection, and photo uploads are not wired yet. The complete sign-up, sign-in, email-confirmation, and report flows still need verification against the configured Supabase project. CMU single sign-on is not implemented.
 
 ## Local development
 
@@ -57,8 +57,10 @@ npm ci
 npm run dev
 ```
 
-Open <http://localhost:3000>. The current visual mockup runs without Supabase credentials because it still uses sample data.
+Before starting the app, copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` using the Supabase project settings. The app also accepts the legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY` in place of the publishable key. Keep these public keys under RLS; never put a service-role or secret key in a `NEXT_PUBLIC_` variable.
 
-When the Supabase integration is added, copy `.env.example` to `.env.local` and fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from the project dashboard. These are the public project URL and publishable key; keep Row Level Security enabled. Never put a Supabase secret/service-role key in a `NEXT_PUBLIC_` variable or commit it. The mockup does not yet read these variables.
+The `.env*` files are ignored by Git except `.env.example`; do not commit `.env.local` or real credentials.
+
+Open <http://localhost:3000> after `npm run dev` starts.
 
 To check a production build locally, run `npm run build`.
