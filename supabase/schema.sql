@@ -36,11 +36,9 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.items ENABLE ROW LEVEL SECURITY;
 
 -- 5. RLS Policies for profiles
-DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON public.profiles;
-
 DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users can view their own profile') THEN
-    CREATE POLICY "Users can view their own profile" ON public.profiles FOR SELECT TO authenticated USING (auth.uid() = id);
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Public profiles are viewable by everyone') THEN
+    CREATE POLICY "Public profiles are viewable by everyone" ON public.profiles FOR SELECT USING (true);
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users can insert their own profile') THEN
     CREATE POLICY "Users can insert their own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
@@ -49,13 +47,6 @@ DO $$ BEGIN
     CREATE POLICY "Users can update their own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
   END IF;
 END $$;
-
-UPDATE public.profiles AS profile
-SET display_name = LEFT(auth_user.email, 2)
-FROM auth.users AS auth_user
-WHERE profile.id = auth_user.id
-  AND profile.display_name = auth_user.email
-  AND auth_user.email IS NOT NULL;
 
 -- 6. RLS Policies for items
 DO $$ BEGIN
@@ -86,7 +77,7 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
   INSERT INTO public.profiles (id, display_name)
-  VALUES (new.id, COALESCE(NULLIF(new.raw_user_meta_data->>'full_name', ''), NULLIF(new.raw_user_meta_data->>'name', ''), LEFT(new.email, 2)))
+  VALUES (new.id, COALESCE(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', new.email))
   ON CONFLICT (id) DO NOTHING;
   RETURN NEW;
 END;
