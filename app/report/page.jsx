@@ -1,11 +1,23 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import LocationMap from "../../components/LocationMap";
 import SiteFooter from "../../components/SiteFooter";
 import SiteHeader from "../../components/SiteHeader";
+import { createClient } from "../../lib/supabase/server";
 
 export const metadata = { title: "แจ้งประกาศ | ตามหา" };
 
-export default function ReportPage() {
+export default async function ReportPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    redirect("/login");
+  }
+
   return (
     <div className="site-shell">
       <SiteHeader />

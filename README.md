@@ -38,17 +38,7 @@ Supabase stores user profiles and item reports. Supabase Auth manages sign-in, a
 
 The proposed database tables and responsibilities for each member are documented in [member-work-file.md](./member-work-file.md).
 
-## Day 8 final-project checkpoint
-
-The lecture slides list a 6-point checkpoint, due by 23:59 on the lecture day. Each item is worth 2 points:
-
-- [ ] Deploy a production build to Vercel and confirm its URL opens on another device.
-- [ ] Use the Next.js App Router and have at least two working routes, such as `/items` and `/items/[id]`.
-- [ ] Have at least one Server Component fetch real data from Supabase.
-
-Record the production URL and the routes/data source used to demonstrate the checkpoint once implementation is ready.
-
-## Day 8 implementation and security notes
+## Implementation and security notes
 
 - Use Server Actions for creating a report and marking a report as resolved. Show a real pending state and return form errors without a full-page reload.
 - Protect `/report` with an auth redirect, and check the current user again inside each Server Action before writing data. A route guard improves navigation but does not replace authorization at the data mutation.
@@ -56,6 +46,21 @@ Record the production URL and the routes/data source used to demonstrate the che
 
 ## Current status
 
-The front-end mockup is scaffolded with the App Router. Home, listing, detail, report, login, registration, and saved-items routes are present so the flow can be previewed. Search, forms, map selection, authentication, uploads, and saved items are visual-only and do not save or change data.
+The home, listing, and detail pages query report data from Supabase. The login and registration forms use Supabase email/password authentication, and signed-in owners can mark their reports as resolved. The report form is still a preview and is not yet connected to the `createItem` Server Action.
 
-The visible item cards use clearly labeled sample content. No real Supabase data is fetched yet, so the Server Component real-data checkpoint remains incomplete. The real data source and mutations will be connected in a later project stage.
+Search and URL filters, saved reports, interactive map selection, and photo uploads are not wired yet. The complete sign-up, sign-in, email-confirmation, and report flows still need verification against the configured Supabase project. CMU single sign-on is not implemented.
+
+## Local development
+
+```bash
+npm ci
+npm run dev
+```
+
+Before starting the app, copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` using the Supabase project settings. The app also accepts the legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY` in place of the publishable key. Keep these public keys under RLS; never put a service-role or secret key in a `NEXT_PUBLIC_` variable.
+
+The `.env*` files are ignored by Git except `.env.example`; do not commit `.env.local` or real credentials.
+
+Open <http://localhost:3000> after `npm run dev` starts.
+
+To check a production build locally, run `npm run build`.
