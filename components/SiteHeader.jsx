@@ -18,6 +18,7 @@ function Mark() {
 
 export default function SiteHeader({ active = "" }) {
   const [user, setUser] = useState(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -38,6 +39,18 @@ export default function SiteHeader({ active = "" }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!mobileNavOpen) return undefined;
+    function closeOnEscape(event) {
+      if (event.key === "Escape") {
+        setMobileNavOpen(false);
+        document.getElementById("mobile-nav-toggle")?.focus();
+      }
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [mobileNavOpen]);
+
   const userName =
     user?.user_metadata?.full_name ||
     user?.user_metadata?.name ||
@@ -49,15 +62,35 @@ export default function SiteHeader({ active = "" }) {
 
   return (
     <header className="site-header">
+      <a className="skip-link" href="#main-content">ข้ามไปยังเนื้อหาหลัก</a>
       <div className="container nav-row">
         <Link className="brand" href="/" aria-label="ตามหา หน้าแรก">
           <Mark />
           <span>ตามหา<small>CAMPUS LOST &amp; FOUND</small></span>
         </Link>
-        <nav className="nav-links" aria-label="เมนูหลัก">
-          <Link href="/" aria-current={active === "home" ? "page" : undefined}>หน้าแรก</Link>
-          <Link href="/items" aria-current={active === "items" ? "page" : undefined}>รายการของ</Link>
-          <Link href="/saved" aria-current={active === "saved" ? "page" : undefined}>รายการที่บันทึก</Link>
+        <button
+          className="mobile-nav-toggle"
+          id="mobile-nav-toggle"
+          type="button"
+          aria-label={mobileNavOpen ? "ปิดเมนูหลัก" : "เปิดเมนูหลัก"}
+          aria-expanded={mobileNavOpen}
+          aria-controls="primary-navigation"
+          onClick={() => setMobileNavOpen((open) => !open)}
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
+        <nav
+          className={`nav-links${mobileNavOpen ? " mobile-open" : ""}`}
+          id="primary-navigation"
+          aria-label="เมนูหลัก"
+        >
+          <Link href="/" aria-current={active === "home" ? "page" : undefined} onClick={() => setMobileNavOpen(false)}>หน้าแรก</Link>
+          <Link href="/items" aria-current={active === "items" ? "page" : undefined} onClick={() => setMobileNavOpen(false)}>รายการของ</Link>
+          <Link href="/saved" aria-current={active === "saved" ? "page" : undefined} onClick={() => setMobileNavOpen(false)}>รายการที่บันทึก</Link>
+          {!user ? <Link className="mobile-nav-auth" href="/login" onClick={() => setMobileNavOpen(false)}>เข้าสู่ระบบ</Link> : null}
+          {user ? <Link className="mobile-nav-auth" href="/my-posts" onClick={() => setMobileNavOpen(false)}>จัดการประกาศของฉัน</Link> : null}
         </nav>
         <div className="nav-actions">
           {user ? (

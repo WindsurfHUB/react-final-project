@@ -9,7 +9,7 @@ export default function LoginPage() {
   return (
     <div className="site-shell">
       <SiteHeader />
-      <main className="container auth-wrap">
+      <main className="container auth-wrap" id="main-content" tabIndex="-1">
         <section className="auth-card">
           <span className="auth-icon">↗</span>
           <div className="eyebrow">WELCOME BACK</div>

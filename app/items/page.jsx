@@ -45,7 +45,7 @@ export default async function ItemsPage({ searchParams }) {
   return (
     <div className="site-shell">
       <SiteHeader active="items" />
-      <main className="container">
+      <main className="container" id="main-content" tabIndex="-1">
         <div className="page-top">
           <div className="breadcrumb">
             <Link href="/">หน้าแรก</Link>

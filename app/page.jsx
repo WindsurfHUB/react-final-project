@@ -13,7 +13,7 @@ export default async function HomePage() {
   return (
     <div className="site-shell">
       <SiteHeader active="home" />
-      <main>
+      <main id="main-content" tabIndex="-1">
         <section className="container hero">
           <div>
             <div className="eyebrow"><span className="eyebrow-dot" /> CAMPUS COMMUNITY</div>
