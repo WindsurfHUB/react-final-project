@@ -2,7 +2,7 @@
 
 **Deadline:** October 9, 2026
 **Working period:** October 7–9, 2026
-**Stack:** Next.js App Router, React, JavaScript/JSX, Tailwind CSS, Supabase (PostgreSQL, Auth, Storage), Leaflet/OpenStreetMap, React Hook Form, Zod, and Sharp.
+**Current stack:** Next.js App Router, React, JavaScript/JSX, Supabase (PostgreSQL, Auth, Storage), and Sharp. Tailwind CSS is installed; the UI mainly uses project CSS. Leaflet/OpenStreetMap, React Hook Form, and Zod remain planned and are not currently implemented/dependencies.
 
 ## Instructions for any AI helping a team member
 
@@ -43,14 +43,14 @@ For a technical guard, the repository owner should protect `main` on GitHub so d
 - [x] Next.js App Router project set up in JavaScript/JSX with a lockfile.
 - [x] Mockup routes scaffolded: `/`, `/items`, `/items/[id]`, `/report`, `/login`, `/register`, and `/saved`.
 - [x] Sample lost-and-found reports and responsive visual layouts added.
-- [x] Production deployment is live at <https://react-final-project-phi-lyart.vercel.app>; anonymous HTTP checks returned 200 for all seven routes.
+- [x] A production deployment is live at <https://react-final-project-phi-lyart.vercel.app>; recheck after the latest changes deploy.
 - [x] Proposal draft documents the four members, project stack, route plan, and initial database schema.
 
-## Current gap
+## Current app status (pulled `main` into `windsurf`)
 
-The home, `/items`, and `/items/[id]` pages query Supabase, and `/login` and `/register` use email/password Auth forms. The Windsurf branch adds a report form wired to `createItem`, with pending/error/success feedback, and optional Sharp-compressed photo upload. The Supabase `item-photos` bucket is configured for public viewing, with authenticated uploads and deletes restricted to each user's folder. The production build passes, and the anonymous route smoke check confirms `/` and `/items` render while `/report` redirects to `/login`; authenticated report creation, photo upload, and owner resolution still need a real signed-in check. The map remains a location-name placeholder pending Nick's interactive picker. Search/URL filters, saved items, and photo rendering on cards/details are not implemented. CMU single sign-on is not implemented.
+The current `windsurf` checkout includes PR #9 from Pond and the photo-display integration. The home, listing, and detail pages read item rows through Supabase Server Components. `/items` has search and URL-backed filters; `/saved` uses browser `localStorage`; cards and details render a stored public photo URL when `image_path` exists. Login and registration call Supabase email/password Auth. The protected `/report` form calls the authenticated `createItem` Server Action, and the signed-in owner sees the resolve control. Optional images are validated in the browser, compressed with Sharp in the server action, uploaded to the public `item-photos` bucket, and their path is saved to `items.image_path`. The map is still a placeholder: users can enter a location name, but there is no interactive pin or coordinate selection. CMU single sign-on is not implemented.
 
-**Verification record:** `npm run build` passes; a previous full `npm audit` reported zero vulnerabilities. The latest audit attempt could not reach the npm registry. The anonymous HTTP smoke check returned 200 for `/`, `/items`, `/login`, `/register`, and `/saved`, and 307 from `/report` to `/login`. Supabase confirms `profiles` and `items` have RLS enabled and the `item-photos` bucket is public with a 4 MiB JPEG-only limit; the upload/delete policies restrict authenticated users to their own folder. A signed-in upload and delete still need end-to-end verification. Direct Supabase HTTP requests from the shell failed with `fetch failed`. The existing backend audit was not run: the safety reviewer rejected it because it creates an Auth account and attempts database writes. Do not retry it indirectly; ask the user for specific approval first.
+**Verification record:** The latest pulled version passed `npm run build` and its working tree was clean. `/report` was previously checked to redirect signed-out visitors to `/login`. Complete signed-in checks for sign-up/sign-in, report creation, photo upload/delete, and owner resolution remain outstanding; recheck the latest Vercel deployment anonymously after it finishes. The current source includes the map placeholder and real photo rendering. Do not run `scripts/test-backend-audit.mjs` without approval: it creates an Auth account and performs database writes. The previous attempt was blocked by the safety reviewer.
 
 ## Handoff notifications
 
@@ -69,7 +69,8 @@ When the completed task unblocks another member, include a message like this at 
 - [x] **P0 · Oct 7:** Configure and verify Row Level Security: public users can read open reports; signed-in users can create reports and update only their own reports.
 - [x] **P0 · Oct 7–8:** Add the Supabase JavaScript SDK, implement the server-only Supabase client and data queries, and replace the mock read on `/items` and item details with real Supabase data, including sensible empty/error states.
 - [x] **P1 · Oct 8:** Implement or finalize the authenticated `createItem` and `markAsResolved` Server Actions. Re-check the user inside each action before writing; return useful success/error results.
-- [x] **P0 · Oct 9:** Verify that a Server Component fetches real Supabase data and that unauthorized writes are rejected by the database policies.
+- [x] **P0 · Oct 9:** Implement Supabase Server Component reads and database RLS policies; current pages read real item rows.
+- [ ] **P0 · Oct 9:** Verify anonymous reads and owner-only writes with a safe permission check. Do not run the backend audit script without approval because it creates accounts and writes data.
 
 ### ณัฐกรณ์ แท่นงาม (Pond) — Frontend
 
@@ -77,23 +78,26 @@ When the completed task unblocks another member, include a message like this at 
 - [x] **P1 · Oct 8:** Implement working search and category/status filters on `/items`; keep filter values in the URL so a filtered link can be shared or refreshed.
 - [x] **P1 · Oct 8:** Implement save/unsave controls and `/saved` with browser `localStorage`; handle an empty saved list.
 - [x] **P1 · Oct 8–9:** Show item type, category, date, location, image when available, and current status on cards/details. Add loading, empty, and error states where needed.
-- [x] **P0 · Oct 9:** Check navigation and the home → list → detail flow at desktop and mobile widths; fix issues found during the team walkthrough.
+- [x] **P0 · Oct 9:** Implement the home → list → detail flow, URL-backed search/filters, saved items, and photo display. Current build passes.
+- [ ] **P1 · Oct 9:** Do a final visual check of navigation and responsive layouts at phone and desktop widths.
 
 ### ณภัทร นิรันต์สิทธิรัชต์ (Nick) — Frontend
 
-- [ ] **P0 · Oct 7–8:** Turn `/login` and `/register` mockups into usable forms connected to Supabase Auth; show validation, pending, success, and error states.
-- [ ] **P0 · Oct 8:** Finish the `/report` form UI for lost/found type, title, category, description, date, location, photo, and map coordinates. Validate required fields with Zod/React Hook Form in coordination with ธนนรินทร์.
-- [ ] **P1 · Oct 8:** Make the Leaflet/OpenStreetMap picker interactive and pass the selected latitude/longitude and location name to the report form.
-- [ ] **P0 · Oct 9:** Check that form controls are keyboard-usable and layouts work at phone width; fix visible validation and error-state issues.
+- [x] **P0 · Oct 7–8:** Implement `/login` and `/register` with Supabase email/password Auth, required-field and password-length checks, pending feedback, inline errors, and signup confirmation feedback. Registration passes `full_name`.
+- [x] **P0 · Oct 8:** Provide the basic `/report` fields for lost/found type, title, category, description, date, location, and optional photo; the form is connected to Windsurf's Server Action.
+- [ ] **P1 · Oct 9:** Replace the static map placeholder with an interactive OpenStreetMap/Leaflet picker and pass the chosen latitude/longitude and location name into the report form.
+- [ ] **P1 · Oct 9:** Check keyboard use and phone-width layout; improve report validation if needed. Current report form uses native required-field validation, not Zod/React Hook Form.
+- [ ] **P0 · Oct 9:** Verify signup, email confirmation, and sign-in against the configured Supabase project; implementation is present, but the complete live flow has not been verified.
 
 ### ธนนรินทร์ สายศรธนานันต์ (Windsurf) — Fullstack
 
 - [x] **P0 · Oct 7:** Coordinate Supabase setup and environment variable names with ภูรินท์; confirm the app can run locally using documented setup steps without committing credentials.
-- [x] **P0 · Oct 8:** Connect the report form to ภูรินท์’s `createItem` Server Action with pending/error feedback and success link. The implementation compiles and the anonymous route guard was verified; signed-in creation still needs a live test. **TODO(Nick):** replace the static map and pass selected latitude/longitude.
-- [ ] **P1 · Oct 8:** Implement and verify the photo flow: validate size/type, compress with Sharp on the server, upload to Supabase Storage, and store the resulting path on the report. The code, public `item-photos` bucket, and owner-folder upload/delete policies are configured. **Remaining:** complete a signed-in upload/delete check and have Pond render the public image URL. Submitting without a photo remains available.
-- [x] **P1 · Oct 8–9:** Wire sign-in protection for `/report` and connect the report owner’s resolve control to `markAsResolved`; coordinate authorization checks with ภูรินท์. The code is implemented and `/report` was verified to redirect signed-out visitors to `/login`; signed-in owner resolution still needs a live test.
-- [ ] **P0 · Oct 9:** Deploy the integrated app to Vercel, add required environment variables, and verify the production URL in an anonymous/incognito session and on another device if available. Windsurf will push the branch owner-side; then confirm the Vercel deploy and end-to-end flow.
-- [ ] **P0 · Oct 9:** Coordinate the final smoke test, capture the production URL and GitHub link, and make sure the team knows which checkpoint item is still incomplete, if any.
+- [x] **P0 · Oct 8:** Connect the report form to Titan's `createItem` Server Action with pending/error feedback and a success link. Signed-out `/report` redirects to `/login`.
+- [x] **P1 · Oct 8:** Implement optional photo upload: validate source type/size, compress with Sharp, upload to Supabase Storage, and store the path on the report. The public bucket and owner-folder policies are configured; Pond's current UI renders the resulting public image URL. Submitting without a photo remains available.
+- [x] **P1 · Oct 8–9:** Add `/report` sign-in protection and show the resolve control only to the signed-in report owner; actions re-check authorization server-side.
+- [ ] **P0 · Oct 9:** Verify signed-in report creation, photo upload/delete, and owner resolution end to end against Supabase. These paths are implemented but lack a completed live check.
+- [ ] **P0 · Oct 9:** Confirm the latest Vercel deployment opens anonymously after this version deploys.
+- [ ] **P0 · Oct 9:** Coordinate final smoke-check results and share the production URL, repository link, and any remaining checkpoint limitation with the group.
 
 ## Shared database outline
 
@@ -125,35 +129,22 @@ When the completed task unblocks another member, include a message like this at 
 
 Saved reports remain in browser `localStorage` for this version, so they do not need a database table.
 
-## Three-day execution order
+## Remaining work in execution order (October 9)
 
-### October 7 — Establish real data
-
-1. ภูรินท์ creates the Supabase project, schema, RLS policies, and first real-data query.
-2. ธนนรินทร์ documents the environment setup and connects the app to the shared Supabase configuration.
-3. ณัฐกรณ์ connects the listing/detail routes to the query; ณภัทร prepares the auth/report forms for integration.
-
-### October 8 — Complete the main user flows
-
-1. ภูรินท์ finishes the create/resolve actions and verifies authorization.
-2. ณภัทร connects login/register, report validation, and the map picker.
-3. ธนนรินทร์ connects the form to `createItem` and implements the photo upload flow.
-4. ณัฐกรณ์ finishes URL-based filters and saved items, then integrates the live list/detail states.
-
-### October 9 — Stabilize and submit
-
-1. All four members walk through register/login → browse/search → view details → submit a report → mark resolved.
-2. ภูรินท์ verifies real server-side reads and Supabase access policies; ณภัทร and ณัฐกรณ์ fix UI/mobile issues; ธนนรินทร์ owns the final deploy and anonymous URL check.
-3. ธนนรินทร์ posts the final Vercel/GitHub links to the group; all members confirm the checkpoint answers reflect what actually works.
+1. **ณภัทร (Nick):** Implement the interactive map picker and pass coordinates into the report form; check keyboard use and phone-width layout.
+2. **ธนนรินทร์ (Windsurf), with Titan:** Walk through signed-in report creation, photo upload/delete, and owner resolution against Supabase. Record any policy or environment issue; do not run the backend audit script without explicit approval because it mutates data.
+3. **ภูรินท์ (Titan):** Confirm anonymous reads and owner-only write behavior with a safe verification approach.
+4. **ณัฐกรณ์ (Pond):** Check the integrated list/detail/save/photo UI at phone and desktop widths.
+5. **ธนนรินทร์ (Windsurf):** Confirm Vercel has deployed the latest version and test the production link anonymously; then share the final URL, repository link, and any known limitation with the group.
 
 ## Checkpoint acceptance checklist
 
-- [x] **Production URL:** Vercel URL opens anonymously; recheck after the final deployment.
-- [x] **App Router:** At least two routes exist and respond; recheck the final user flow after integration.
-- [ ] **Real Server Component data:** A Server Component fetches actual rows from Supabase. The present mockup does not satisfy this yet; ภูรินท์ owns the query and ณัฐกรณ์ integrates it into the list/detail UI.
+- [ ] **Production URL:** A Vercel deployment exists; open the latest deployment anonymously after it finishes.
+- [x] **App Router:** Multiple app routes are implemented; repeat the production route check after the latest deploy.
+- [x] **Real Server Component data:** Home/list/detail pages call the Supabase data layer from Server Components; actual item data and an uploaded photo were present in the configured project.
 
 ## Security and completion checks
 
-- [ ] Keep real credentials in local `.env.local` and Vercel environment variables; never commit secrets or expose a Supabase service-role key to browser code.
-- [ ] Protect report creation and status changes with authentication checks inside the Server Actions and database RLS policies.
-- [ ] Before the deadline, verify the production build, all important routes, the report flow, and anonymous access to the Vercel URL.
+- [x] Keep real credentials in local environment files and Vercel variables; `.env*` files are ignored except `.env.example`. Never expose a service-role key in browser code.
+- [x] Protect report creation and status changes with authentication checks inside Server Actions and database RLS policies.
+- [ ] Verify the signed-in report/photo/resolve flow and latest production URL before submission.
