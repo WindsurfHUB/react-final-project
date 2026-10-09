@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 export default function ItemCard({ item }) {
+  // TODO(Pond): Render item.imagePath when the team settles the Storage read-access strategy.
   return (
     <article className="item-card">
       <Link href={`/items/${item.id}`} aria-label={`ดูรายละเอียด ${item.title}`}>

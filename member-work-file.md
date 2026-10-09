@@ -48,7 +48,9 @@ For a technical guard, the repository owner should protect `main` on GitHub so d
 
 ## Current gap
 
-The home, `/items`, and `/items/[id]` pages now query Supabase, and `/login` and `/register` use email/password Auth forms. `/report` is still a preview and is not connected to `createItem`; its map is static. Search/URL filters, saved items, and photo upload are not implemented. The owner-only resolve control and `/report` sign-in guard are in the Windsurf branch and still need an authenticated-flow check. CMU single sign-on is not implemented.
+The home, `/items`, and `/items/[id]` pages query Supabase, and `/login` and `/register` use email/password Auth forms. The Windsurf branch adds a report form wired to `createItem`, with pending/error/success feedback, and optional Sharp-compressed photo upload. The production build passes, and the anonymous route smoke check confirms `/` and `/items` render while `/report` redirects to `/login`; authenticated report creation and owner resolution still need a real signed-in check. The map remains a location-name placeholder pending Nick's interactive picker. Photo upload requires Titan to configure the `item-photos` Storage bucket and owner-folder policies; the connected Supabase project currently has no such bucket or custom Storage policies. Search/URL filters, saved items, and photo rendering on cards/details are not implemented. CMU single sign-on is not implemented.
+
+**Verification record:** `npm run build` passes; full `npm audit` reports zero vulnerabilities. The anonymous HTTP smoke check returned 200 for `/`, `/items`, `/login`, `/register`, and `/saved`, and 307 from `/report` to `/login`. A read-only Supabase query confirms `profiles` and `items` have RLS enabled; the `item-photos` bucket is absent. Direct Supabase HTTP requests from the shell failed with `fetch failed`. The existing backend audit was not run: the safety reviewer rejected it because it creates an Auth account and attempts database writes. Do not retry it indirectly; ask the user for specific approval first.
 
 ## Handoff notifications
 
@@ -87,10 +89,10 @@ When the completed task unblocks another member, include a message like this at 
 ### ธนนรินทร์ สายศรธนานันต์ (Windsurf) — Fullstack
 
 - [x] **P0 · Oct 7:** Coordinate Supabase setup and environment variable names with ภูรินท์; confirm the app can run locally using documented setup steps without committing credentials.
-- [ ] **P0 · Oct 8:** Connect ณภัทร’s validated report form and map values to ภูรินท์’s `createItem` Server Action. Show a pending state and display returned field/server errors.
-- [ ] **P1 · Oct 8:** Implement the photo flow: validate size/type, compress with Sharp on the server, upload to the Supabase Storage bucket, and store the resulting path on the report.
-- [ ] **P1 · Oct 8–9:** Wire sign-in protection for `/report` and connect the report owner’s resolve control to `markAsResolved`; coordinate authorization checks with ภูรินท์.
-- [ ] **P0 · Oct 9:** Deploy the integrated app to Vercel, add required environment variables, and verify the production URL in an anonymous/incognito session and on another device if available.
+- [x] **P0 · Oct 8:** Connect the report form to ภูรินท์’s `createItem` Server Action with pending/error feedback and success link. The implementation compiles and the anonymous route guard was verified; signed-in creation still needs a live test. **TODO(Nick):** replace the static map and pass selected latitude/longitude.
+- [ ] **P1 · Oct 8:** Implement the photo flow: validate size/type, compress with Sharp on the server, upload to the Supabase Storage bucket, and store the resulting path on the report. The code is implemented; **TODO(Titan):** create the `item-photos` bucket and owner-folder Storage policies before uploads can work. Submitting without a photo remains available.
+- [x] **P1 · Oct 8–9:** Wire sign-in protection for `/report` and connect the report owner’s resolve control to `markAsResolved`; coordinate authorization checks with ภูรินท์. The code is implemented and `/report` was verified to redirect signed-out visitors to `/login`; signed-in owner resolution still needs a live test.
+- [ ] **P0 · Oct 9:** Deploy the integrated app to Vercel, add required environment variables, and verify the production URL in an anonymous/incognito session and on another device if available. Windsurf will push the branch owner-side; then confirm the Vercel deploy and end-to-end flow.
 - [ ] **P0 · Oct 9:** Coordinate the final smoke test, capture the production URL and GitHub link, and make sure the team knows which checkpoint item is still incomplete, if any.
 
 ## Shared database outline

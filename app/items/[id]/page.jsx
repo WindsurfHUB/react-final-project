@@ -35,6 +35,7 @@ export default async function ItemDetailPage({ params }) {
           <div className="breadcrumb"><Link href="/">หน้าแรก</Link><span>›</span><Link href="/items">รายการประกาศ</Link><span>›</span><span>รายละเอียด</span></div>
         </div>
         <div className="detail-layout">
+          {/* TODO(Pond): Render item.imagePath here after the Storage read-access strategy is configured. */}
           <div className={`detail-photo ${item.tone}`}><span className="badge">{item.type === "found" ? "พบของ" : "ตามหาของ"}{item.status === "resolved" ? " · ปิดแล้ว" : ""}</span><span className="item-emoji" aria-hidden="true">{item.emoji}</span></div>
           <div className="detail-content">
             <span className="eyebrow"><span className="eyebrow-dot" /> {item.type === "found" ? "FOUND ITEM" : "LOST ITEM"}</span>
