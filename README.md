@@ -34,7 +34,7 @@ A campus web app where students and staff can report lost or found items, search
 
 ## Data and uploads
 
-Supabase stores user profiles and item reports. Supabase Auth manages sign-in. The report form can store a compressed photo path in `items.image_path` when the `item-photos` Storage bucket and its owner-folder policies are configured. The form also stores the report's latitude and longitude when a map picker supplies them. Saved reports are planned for browser `localStorage`.
+Supabase stores user profiles and item reports. Supabase Auth manages sign-in. The report form accepts JPEG, PNG, and WebP images, compresses them to JPEG on the server, and stores the resulting path in `items.image_path`. The `item-photos` bucket is public for viewing; authenticated users can upload and delete only within their own user-ID folder. The bucket accepts JPEG output up to 4 MiB. The form also stores the report's latitude and longitude when a map picker supplies them. Saved reports are planned for browser `localStorage`.
 
 The proposed database tables and responsibilities for each member are documented in [member-work-file.md](./member-work-file.md).
 
