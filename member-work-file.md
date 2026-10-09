@@ -73,11 +73,11 @@ When the completed task unblocks another member, include a message like this at 
 
 ### ณัฐกรณ์ แท่นงาม (Pond) — Frontend
 
-- [ ] **P0 · Oct 7–8:** Connect `/`, `/items`, and `/items/[id]` to the real report data supplied by ภูรินท์; remove sample-only content from the primary list/detail flow.
-- [ ] **P1 · Oct 8:** Implement working search and category/status filters on `/items`; keep filter values in the URL so a filtered link can be shared or refreshed.
-- [ ] **P1 · Oct 8:** Implement save/unsave controls and `/saved` with browser `localStorage`; handle an empty saved list.
-- [ ] **P1 · Oct 8–9:** Show item type, category, date, location, image when available, and current status on cards/details. Add loading, empty, and error states where needed.
-- [ ] **P0 · Oct 9:** Check navigation and the home → list → detail flow at desktop and mobile widths; fix issues found during the team walkthrough.
+- [x] **P0 · Oct 7–8:** Connect `/`, `/items`, and `/items/[id]` to the real report data supplied by ภูรินท์; remove sample-only content from the primary list/detail flow.
+- [x] **P1 · Oct 8:** Implement working search and category/status filters on `/items`; keep filter values in the URL so a filtered link can be shared or refreshed.
+- [x] **P1 · Oct 8:** Implement save/unsave controls and `/saved` with browser `localStorage`; handle an empty saved list.
+- [x] **P1 · Oct 8–9:** Show item type, category, date, location, image when available, and current status on cards/details. Add loading, empty, and error states where needed.
+- [x] **P0 · Oct 9:** Check navigation and the home → list → detail flow at desktop and mobile widths; fix issues found during the team walkthrough.
 
 ### ณภัทร นิรันต์สิทธิรัชต์ (Nick) — Frontend
 
