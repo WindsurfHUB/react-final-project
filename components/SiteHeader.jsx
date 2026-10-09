@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { createClient } from "../lib/supabase/client";
 
 function Mark() {
   return (
@@ -13,6 +17,36 @@ function Mark() {
 }
 
 export default function SiteHeader({ active = "" }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    let isMounted = true;
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (isMounted) setUser(session?.user ?? null);
+    });
+
+    supabase.auth.getUser().then(({ data: { user: currentUser } }) => {
+      if (isMounted) setUser(currentUser ?? null);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const userName =
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    user?.email ||
+    "บัญชีของฉัน";
+  const avatarUrl =
+    user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
+  const avatarInitial = Array.from(userName.trim())[0] || "ฉัน";
+
   return (
     <header className="site-header">
       <div className="container nav-row">
@@ -26,7 +60,24 @@ export default function SiteHeader({ active = "" }) {
           <Link href="/saved" aria-current={active === "saved" ? "page" : undefined}>รายการที่บันทึก</Link>
         </nav>
         <div className="nav-actions">
-          <Link className="button button-light" href="/login">เข้าสู่ระบบ</Link>
+          {user ? (
+            <Link
+              className="profile-link"
+              href="/my-posts"
+              aria-label="จัดการประกาศของฉัน"
+              title={`${userName} · จัดการประกาศของฉัน`}
+            >
+              <span className="profile-avatar" aria-hidden="true">
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="" />
+                ) : (
+                  avatarInitial
+                )}
+              </span>
+            </Link>
+          ) : (
+            <Link className="button button-light" href="/login">เข้าสู่ระบบ</Link>
+          )}
           <Link className="button button-primary" href="/report"><span aria-hidden="true">＋</span> แจ้งของหาย</Link>
         </div>
       </div>

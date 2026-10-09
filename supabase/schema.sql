@@ -66,9 +66,21 @@ DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users can update their own items') THEN
     CREATE POLICY "Users can update their own items" 
       ON public.items FOR UPDATE 
-      TO authenticated 
+      TO authenticated
       USING (auth.uid() = user_id)
       WITH CHECK (auth.uid() = user_id);
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'items'
+      AND policyname = 'Users can delete their own items'
+  ) THEN
+    CREATE POLICY "Users can delete their own items"
+      ON public.items FOR DELETE
+      TO authenticated
+      USING ((SELECT auth.uid()) = user_id);
   END IF;
 END $$;
 
