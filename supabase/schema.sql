@@ -87,3 +87,64 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- 8. Public item photos. Anyone with the public URL can view an image;
+-- authenticated users may upload/delete only inside their own UUID folder.
+INSERT INTO storage.buckets (
+  id,
+  name,
+  public,
+  file_size_limit,
+  allowed_mime_types
+)
+VALUES (
+  'item-photos',
+  'item-photos',
+  TRUE,
+  4194304,
+  ARRAY['image/jpeg']::text[]
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  name = EXCLUDED.name,
+  public = EXCLUDED.public,
+  file_size_limit = EXCLUDED.file_size_limit,
+  allowed_mime_types = EXCLUDED.allowed_mime_types;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'storage'
+      AND tablename = 'objects'
+      AND policyname = 'Authenticated users upload own item photos'
+  ) THEN
+    CREATE POLICY "Authenticated users upload own item photos"
+      ON storage.objects
+      FOR INSERT
+      TO authenticated
+      WITH CHECK (
+        bucket_id = 'item-photos'
+        AND (storage.foldername(name))[1] = (SELECT auth.uid())::text
+      );
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'storage'
+      AND tablename = 'objects'
+      AND policyname = 'Authenticated users delete own item photos'
+  ) THEN
+    CREATE POLICY "Authenticated users delete own item photos"
+      ON storage.objects
+      FOR DELETE
+      TO authenticated
+      USING (
+        bucket_id = 'item-photos'
+        AND (storage.foldername(name))[1] = (SELECT auth.uid())::text
+      );
+  END IF;
+END
+$$;
