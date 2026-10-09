@@ -1,8 +1,9 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
   --ink: #172522;
-  --muted: #6d7975;
+  --muted: #626e69;
   --line: #e7ebe8;
   --paper: #f7f8f5;
   --white: #fff;
@@ -25,13 +26,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; text-decoration: none; }
+.skip-link { position: fixed; z-index: 10001; top: 8px; left: 8px; padding: 11px 15px; transform: translateY(calc(-100% - 12px)); border-radius: 8px; background: var(--green-dark); color: white; font-size: 13px; font-weight: 750; }
+.skip-link:focus-visible { transform: translateY(0); outline: 3px solid white; outline-offset: 2px; }
 button, input, textarea { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 ::selection { background: #cce0d2; color: var(--ink); }
 
 .site-shell { min-height: 100vh; overflow: hidden; }
 .container { width: min(1160px, calc(100% - 56px)); margin: 0 auto; }
-.site-header { height: 78px; display: flex; align-items: center; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.82); }
+.site-header { position: relative; z-index: 20; height: 78px; display: flex; align-items: center; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.82); }
 .nav-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .brand { display: inline-flex; align-items: center; gap: 11px; font-weight: 800; letter-spacing: -0.045em; font-size: 19px; }
 .brand-mark { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px; background: var(--green); color: white; }
@@ -39,6 +42,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .brand small { display: block; margin-top: 1px; color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .17em; }
 .nav-links { display: flex; align-items: center; gap: 29px; color: #5b6863; font-size: 13px; font-weight: 650; }
 .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--green); }
+.mobile-nav-toggle, .mobile-nav-auth { display: none; }
 .nav-actions { display: flex; align-items: center; gap: 11px; }
 .profile-link { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; outline-offset: 3px; }
 .profile-avatar { width: 42px; height: 42px; display: grid; place-items: center; overflow: hidden; border: 2px solid white; border-radius: 50%; background: var(--green-soft); color: var(--green); font-size: 15px; font-weight: 800; box-shadow: 0 0 0 1px var(--line); }
@@ -158,6 +162,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .map-card::before { position: absolute; top: 47%; left: 48%; content: ""; width: 18px; height: 18px; border: 5px solid white; border-radius: 50% 50% 50% 0; background: var(--orange); box-shadow: 0 4px 14px rgba(35,58,45,.22); transform: rotate(-45deg); }
 .map-label { position: absolute; bottom: 11px; left: 12px; padding: 6px 9px; border-radius: 8px; background: rgba(255,255,255,.9); color: var(--muted); font-size: 9px; }
 .map-attribution { position: absolute; right: 9px; bottom: 9px; color: #64716a; font-size: 8px; }
+.map-loading { display: grid; min-height: 260px; place-items: center; color: var(--muted); font-size: 11px; }
+.map-card-interactive { width: 100%; height: 260px; min-height: 260px; border-radius: 12px; background: #e8eee4; background-image: none; }
+.map-card-interactive::before { display: none; }
+.map-center-control { position: absolute; z-index: 1000; top: 10px; right: 10px; min-height: 36px; padding: 0 11px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--ink); font-size: 10px; font-weight: 700; cursor: pointer; }
+.map-center-control:focus-visible { outline: 3px solid rgba(21,92,75,.24); outline-offset: 2px; }
+.map-selection-status { margin: 10px 0 0 !important; color: var(--muted); font-size: 10px; line-height: 1.6; }
 
 .form-layout { display: grid; grid-template-columns: 1fr .8fr; gap: 26px; align-items: start; padding-bottom: 65px; }
 .form-card { padding: 25px; border: 1px solid var(--line); border-radius: 20px; background: white; box-shadow: 0 9px 28px rgba(24,47,40,.035); }
@@ -168,6 +178,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .form-control { width: 100%; min-height: 42px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; outline: 0; background: white; color: var(--ink); font-size: 11px; }
 textarea.form-control { min-height: 88px; resize: vertical; }
 .form-control:focus { border-color: #8bb29d; box-shadow: 0 0 0 3px rgba(21,92,75,.08); }
+.form-control[aria-invalid="true"] { border-color: #b94e3d; }
+.form-error { margin: 6px 0 0; color: #923c2c; font-size: 10px; line-height: 1.6; }
 .choice-row { display: flex; gap: 8px; }
 .choice { flex: 1; display: flex; align-items: center; gap: 8px; min-height: 41px; padding: 0 11px; border: 1px solid var(--line); border-radius: 10px; color: #617069; font-size: 10px; }
 .choice.selected { border-color: #8bb29d; background: #f0f7f2; color: var(--green); }
@@ -235,9 +247,17 @@ textarea.form-control { min-height: 88px; resize: vertical; }
 @media (max-width: 620px) {
   .container { width: calc(100% - 32px); }
   .site-header { height: 67px; }
+  .nav-row { gap: 9px; }
   .brand { font-size: 16px; }
   .brand-mark { width: 33px; height: 33px; }
   .nav-links { display: none; }
+  .nav-links.mobile-open { position: absolute; top: calc(100% - 1px); left: 16px; right: 16px; display: grid; gap: 0; padding: 8px 14px; border: 1px solid var(--line); border-radius: 0 0 8px 8px; background: white; color: var(--ink); box-shadow: var(--shadow); }
+  .nav-links.mobile-open a { display: flex; min-height: 44px; align-items: center; border-bottom: 1px solid var(--line); }
+  .nav-links.mobile-open a:last-child { border-bottom: 0; }
+  .nav-links.mobile-open .mobile-nav-auth { display: flex; margin-top: 4px; color: var(--green); font-weight: 800; }
+  .mobile-nav-toggle { width: 38px; height: 38px; flex: 0 0 auto; display: grid; align-content: center; justify-items: center; gap: 4px; border: 1px solid var(--line); border-radius: 8px; background: white; cursor: pointer; }
+  .mobile-nav-toggle span { width: 16px; height: 2px; border-radius: 2px; background: var(--ink); }
+  .mobile-nav-toggle:focus-visible, .nav-links.mobile-open a:focus-visible { outline: 3px solid rgba(21,92,75,.24); outline-offset: 2px; }
   .nav-actions .button-light { display: none; }
   .nav-actions .button { min-height: 38px; padding: 0 12px; font-size: 11px; }
   .profile-avatar { width: 38px; height: 38px; }
