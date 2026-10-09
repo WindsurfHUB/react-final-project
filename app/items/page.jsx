@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ItemCard from "../../components/ItemCard";
+import ItemFilters from "../../components/ItemFilters";
 import SiteFooter from "../../components/SiteFooter";
 import SiteHeader from "../../components/SiteHeader";
 import StateMessage from "../../components/StateMessage";
@@ -8,36 +9,109 @@ import { getItems } from "../../lib/items";
 export const metadata = { title: "รายการประกาศ | ตามหา" };
 export const dynamic = "force-dynamic";
 
-export default async function ItemsPage() {
-  const { items, error } = await getItems();
-  const isDemo = items.some((item) => item.isDemo);
+export default async function ItemsPage({ searchParams }) {
+  const params = await searchParams;
+  const search = (params?.search || "").toLowerCase().trim();
+  const type = params?.type || "all";
+  const category = params?.category || "all";
+  const status = params?.status || "all";
+
+  const { items: allItems, error } = await getItems();
+
+  // กรองข้อมูลตาม searchParams
+  const filteredItems = (allItems || []).filter((item) => {
+    if (type !== "all" && item.type !== type) return false;
+    if (category !== "all" && item.category !== category) return false;
+    if (status !== "all" && item.status !== status) return false;
+
+    if (search) {
+      const titleMatch = (item.title || "").toLowerCase().includes(search);
+      const locMatch = (item.location || "").toLowerCase().includes(search);
+      const descMatch = (item.description || "").toLowerCase().includes(search);
+      const catMatch = (item.category || "").toLowerCase().includes(search);
+      if (!titleMatch && !locMatch && !descMatch && !catMatch) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  const isDemo = filteredItems.some((item) => item.isDemo);
+  const hasActiveFilters = Boolean(
+    search || type !== "all" || category !== "all" || status !== "all"
+  );
 
   return (
     <div className="site-shell">
       <SiteHeader active="items" />
       <main className="container">
         <div className="page-top">
-          <div className="breadcrumb"><Link href="/">หน้าแรก</Link><span>›</span><span>รายการประกาศ</span></div>
+          <div className="breadcrumb">
+            <Link href="/">หน้าแรก</Link>
+            <span>›</span>
+            <span>รายการประกาศ</span>
+          </div>
+
           <div className="page-title-row">
-            <div><div className="eyebrow">BROWSE THE BOARD</div><h1>รายการประกาศ</h1><p>เลือกดูของที่พบ หรือช่วยตามหาของที่หายไป</p></div>
-            <Link className="button button-primary" href="/report">＋ แจ้งของหาย</Link>
+            <div>
+              <div className="eyebrow">BROWSE THE BOARD</div>
+              <h1>รายการประกาศ</h1>
+              <p>เลือกดูของที่พบ หรือช่วยตามหาของที่หายไป</p>
+            </div>
+            <Link className="button button-primary" href="/report">
+              ＋ แจ้งของหาย
+            </Link>
           </div>
-          {isDemo ? <div className="demo-banner"><span aria-hidden="true">ⓘ</span> ข้อมูลตัวอย่างสำหรับพรีวิวหน้าตาแอป</div> : null}
-          <div className="search-panel">
-            <label className="search-box"><span aria-hidden="true">⌕</span><input aria-label="ค้นหาประกาศ" placeholder="ค้นหาชื่อสิ่งของหรือสถานที่…" disabled /></label>
-            <button className="button button-primary" type="button" aria-disabled="true">ค้นหา</button>
-          </div>
-          <div className="filter-row" aria-label="ตัวกรอง">
-            <span className="filter-chip active">ทั้งหมด</span><span className="filter-chip">ของหาย</span><span className="filter-chip">ของที่พบ</span><span className="filter-chip">⌄ หมวดหมู่</span><span className="filter-chip">⌖ สถานที่</span>
-          </div>
+
+          {isDemo ? (
+            <div className="demo-banner">
+              <span aria-hidden="true">ⓘ</span> ข้อมูลตัวอย่างสำหรับพรีวิวหน้าตาแอป
+            </div>
+          ) : null}
+
+          <ItemFilters totalCount={filteredItems.length} />
+
           {error ? (
-            <StateMessage icon="!" title="โหลดข้อมูลไม่สำเร็จ" text="ลองรีเฟรชหน้านี้อีกครั้ง" action={{ href: "/items", label: "ลองใหม่" }} />
-          ) : items.length === 0 ? (
-            <StateMessage title="ยังไม่มีประกาศ" text="เป็นคนแรกที่ลงประกาศของหายหรือของที่พบ" action={{ href: "/report", label: "แจ้งประกาศ" }} />
+            <StateMessage
+              icon="!"
+              title="โหลดข้อมูลไม่สำเร็จ"
+              text="ลองรีเฟรชหน้านี้อีกครั้ง"
+              action={{ href: "/items", label: "ลองใหม่" }}
+            />
+          ) : filteredItems.length === 0 ? (
+            <div className="empty-state">
+              <span aria-hidden="true">{hasActiveFilters ? "⌕" : "📦"}</span>
+              <h2>{hasActiveFilters ? "ไม่พบประกาศที่ตรงกับเงื่อนไข" : "ยังไม่มีประกาศ"}</h2>
+              <p>
+                {hasActiveFilters
+                  ? "ลองเปลี่ยนคำค้นหา หรือรีเซ็ตตัวกรองเพื่อดูรายการทั้งหมด"
+                  : "เป็นคนแรกที่ลงประกาศของหายหรือของที่พบในแคมปัส"}
+              </p>
+              {hasActiveFilters ? (
+                <Link className="button button-light" href="/items">
+                  ล้างตัวกรองทั้งหมด
+                </Link>
+              ) : (
+                <Link className="button button-primary" href="/report">
+                  แจ้งประกาศ
+                </Link>
+              )}
+            </div>
           ) : (
             <>
-              <div className="results-bar"><span>แสดง <b>{items.length} ประกาศ</b></span><span>เรียงตาม: ล่าสุด</span></div>
-              <div className="listing-grid">{items.map((item) => <ItemCard key={item.id} item={item} />)}</div>
+              <div className="results-bar">
+                <span>
+                  แสดง <b>{filteredItems.length} ประกาศ</b>
+                  {hasActiveFilters ? ` (จากทั้งหมด ${allItems.length} รายการ)` : ""}
+                </span>
+                <span>เรียงตาม: ล่าสุด</span>
+              </div>
+              <div className="listing-grid">
+                {filteredItems.map((item) => (
+                  <ItemCard key={item.id} item={item} />
+                ))}
+              </div>
             </>
           )}
         </div>
