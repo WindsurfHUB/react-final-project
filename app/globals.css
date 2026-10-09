@@ -40,6 +40,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .nav-links { display: flex; align-items: center; gap: 29px; color: #5b6863; font-size: 13px; font-weight: 650; }
 .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--green); }
 .nav-actions { display: flex; align-items: center; gap: 11px; }
+.profile-link { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; outline-offset: 3px; }
+.profile-avatar { width: 42px; height: 42px; display: grid; place-items: center; overflow: hidden; border: 2px solid white; border-radius: 50%; background: var(--green-soft); color: var(--green); font-size: 15px; font-weight: 800; box-shadow: 0 0 0 1px var(--line); }
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-link:hover .profile-avatar { box-shadow: 0 0 0 2px #b9ccc1; }
 .button { display: inline-flex; min-height: 42px; align-items: center; justify-content: center; gap: 8px; border: 1px solid transparent; border-radius: 12px; padding: 0 17px; font-size: 13px; font-weight: 750; transition: transform .18s ease, background .18s ease, border-color .18s ease; cursor: pointer; }
 .button:hover { transform: translateY(-1px); }
 .button-primary { background: var(--green); color: white; box-shadow: 0 7px 16px rgba(21,92,75,.15); }
@@ -224,6 +228,7 @@ textarea.form-control { min-height: 88px; resize: vertical; }
   .orbit { width: 310px; }
   .hero-photo { height: 165px; }
   .item-grid, .listing-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .owner-post-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .detail-layout { gap: 20px; }
   .detail-photo { min-height: 350px; }
 }
@@ -235,6 +240,7 @@ textarea.form-control { min-height: 88px; resize: vertical; }
   .nav-links { display: none; }
   .nav-actions .button-light { display: none; }
   .nav-actions .button { min-height: 38px; padding: 0 12px; font-size: 11px; }
+  .profile-avatar { width: 38px; height: 38px; }
   .hero { grid-template-columns: 1fr; gap: 8px; padding: 42px 0 32px; }
   .hero h1 { max-width: 440px; font-size: clamp(40px,12vw,57px); }
   .hero-copy { font-size: 13px; }
@@ -252,6 +258,7 @@ textarea.form-control { min-height: 88px; resize: vertical; }
   .section-heading h2 { font-size: 22px; }
   .section-heading .text-link { margin-top: 10px; white-space: nowrap; }
   .item-grid, .listing-grid { grid-template-columns: 1fr; gap: 13px; }
+  .owner-post-grid { grid-template-columns: 1fr; gap: 13px; }
   .item-card-photo { height: 190px; }
   .cta-band { grid-template-columns: 1fr; margin: 0 auto 42px; padding: 23px; }
   .cta-band h2 { font-size: 19px; }
@@ -301,4 +308,22 @@ textarea.form-control { min-height: 88px; resize: vertical; }
 .loading-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 0; gap: 14px; color: var(--muted); font-size: 12px; }
 .spinner { width: 32px; height: 32px; border: 3px solid rgba(21,92,75,.15); border-top-color: var(--green); border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+.owner-post-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 17px; padding-bottom: 58px; }
+.owner-post-card { min-width: 0; }
+.owner-post-actions { margin-top: 10px; padding: 13px; border: 1px solid var(--line); border-radius: 14px; background: white; }
+.owner-post-actions > .auth-message { margin-bottom: 10px; }
+.owner-edit-form .form-field { margin-bottom: 12px; }
+.owner-edit-form textarea.form-control { min-height: 76px; }
+.owner-action-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.owner-action-buttons .button { flex: 1 1 auto; min-height: 38px; }
+.button-danger { border-color: #f0c9c2; background: #fff5f2; color: #923c2c; }
+.button-danger:hover { border-color: #d99b8f; background: #ffede8; }
+
+@media (max-width: 850px) {
+  .owner-post-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  .owner-post-grid { grid-template-columns: 1fr; }
+}
 
