@@ -34,7 +34,7 @@ A campus web app where students and staff can report lost or found items, search
 
 ## Data and uploads
 
-Supabase stores user profiles and item reports. Supabase Auth manages sign-in, and Supabase Storage holds compressed report photos. The `items` table stores each photo's storage path plus the report's latitude and longitude. Saved reports are kept in browser `localStorage` for the first version.
+Supabase stores user profiles and item reports. Supabase Auth manages sign-in. The report form can store a compressed photo path in `items.image_path` when the `item-photos` Storage bucket and its owner-folder policies are configured. The form also stores the report's latitude and longitude when a map picker supplies them. Saved reports are planned for browser `localStorage`.
 
 The proposed database tables and responsibilities for each member are documented in [member-work-file.md](./member-work-file.md).
 
@@ -46,9 +46,9 @@ The proposed database tables and responsibilities for each member are documented
 
 ## Current status
 
-The home, listing, and detail pages query report data from Supabase. The login and registration forms use Supabase email/password authentication, and signed-in owners can mark their reports as resolved. The report form is still a preview and is not yet connected to the `createItem` Server Action.
+The home, listing, and detail pages query report data from Supabase. The login and registration forms use Supabase email/password authentication, and signed-in owners can mark their reports as resolved. The signed-in report form now calls `createItem` and shows pending, error, and success feedback. The optional image path uses Sharp and Supabase Storage, pending bucket and policy setup. The interactive map remains a placeholder; a location name can be entered manually.
 
-Search and URL filters, saved reports, interactive map selection, and photo uploads are not wired yet. The complete sign-up, sign-in, email-confirmation, and report flows still need verification against the configured Supabase project. CMU single sign-on is not implemented.
+Search and URL filters, saved reports, interactive map selection, and rendering stored photos on cards/details are not wired yet. The complete sign-up, sign-in, email-confirmation, and report flows still need verification against the configured Supabase project. CMU single sign-on is not implemented.
 
 ## Local development
 

@@ -167,9 +167,23 @@ textarea.form-control { min-height: 88px; resize: vertical; }
 .choice-row { display: flex; gap: 8px; }
 .choice { flex: 1; display: flex; align-items: center; gap: 8px; min-height: 41px; padding: 0 11px; border: 1px solid var(--line); border-radius: 10px; color: #617069; font-size: 10px; }
 .choice.selected { border-color: #8bb29d; background: #f0f7f2; color: var(--green); }
+.report-type-picker { min-width: 0; margin: 0 0 16px; padding: 0; border: 0; }
+.report-type-picker legend { padding: 0; }
+.report-type-picker .choice { justify-content: flex-start; background: white; cursor: pointer; text-align: left; }
+.report-type-picker .choice:focus-visible, .upload-control:focus-within { outline: 3px solid rgba(21,92,75,.2); outline-offset: 2px; }
 .upload-box { display: grid; place-items: center; min-height: 112px; border: 1px dashed #c7d5cc; border-radius: 12px; background: #fbfcfa; color: var(--muted); text-align: center; font-size: 10px; }
 .upload-box strong { display: block; margin-top: 5px; color: var(--ink); font-size: 10px; }
 .upload-box small { display: block; margin-top: 4px; font-size: 9px; }
+.upload-control { position: relative; padding: 13px; cursor: pointer; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; clip-path: inset(50%); }
+.report-photo-preview { max-width: 100%; max-height: 180px; border-radius: 9px; object-fit: contain; }
+.report-remove-photo { margin-top: 5px; padding-left: 0; }
+.report-feedback { margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; font-size: 11px; line-height: 1.6; }
+.report-feedback a { font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
+.report-feedback-error { background: #fff0ed; color: #923c2c; }
+.report-feedback-success { background: var(--green-soft); color: var(--green); }
+.report-submit { width: 100%; }
+.report-submit:disabled, .report-remove-photo:disabled { cursor: wait; opacity: .65; }
 .form-aside { padding: 21px; border: 1px solid var(--line); border-radius: 18px; background: #fff; }
 .form-aside h3 { margin: 0 0 6px; font-size: 14px; }
 .form-aside p { margin: 0 0 14px; color: var(--muted); font-size: 10px; line-height: 1.75; }
