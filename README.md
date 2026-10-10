@@ -87,12 +87,14 @@ Photo upload and cleanup actions are in [`lib/actions/item-photos.js`](./lib/act
 
 ## Team and contribution log
 
-| Member | Role | Contribution |
-| --- | --- | --- |
-| ภูรินท์ ชัยประสาน (Titan) | Backend | Supabase project, PostgreSQL schema and RLS policies, server-side Supabase client, item queries, and initial create/resolve actions. |
-| ณภัทร นิรันต์สิทธิรัชต์ (Nick) | Frontend | Login and registration UI with Supabase Auth, report-form UI, React Hook Form/Zod validation, map picker integration, and accessibility/responsive improvements. |
-| ณัฐกรณ์ แท่นงาม (Pond) | Frontend | Home, listing, and detail UI; search and URL-backed filters; saved reports; and responsive presentation of report data and photos. |
-| ธนนรินทร์ สายศรธนานันต์ (Windsurf) | Fullstack | Connected report creation and photo processing, protected report flow, owner dashboard, owner edit/delete controls, and signed-in profile navigation. |
+| Member | Role | Main files / routes owned | Contribution |
+| --- | --- | --- | --- |
+| ภูรินท์ ชัยประสาน (Titan) | Backend | `supabase/schema.sql`; `lib/supabase/`; `lib/items.js`; `lib/actions/items.js` | Supabase project, PostgreSQL schema and RLS policies, server-side Supabase client, item queries, and initial create/resolve actions. |
+| ณภัทร นิรันต์สิทธิรัชต์ (Nick) | Frontend | `app/login/page.jsx`; `app/register/page.jsx`; `components/AuthForm.jsx`; `components/ReportForm.jsx`; `components/InteractiveLocationMap.jsx` | Login and registration UI with Supabase Auth, report-form UI, React Hook Form/Zod validation, map picker, and accessibility/responsive improvements. |
+| ณัฐกรณ์ แท่นงาม (Pond) | Frontend | `app/page.jsx`; `app/items/`; `app/saved/`; `components/ItemCard.jsx`; `components/ItemFilters.jsx`; `components/BookmarkButton.jsx` | Home, listing, and detail UI; search and URL-backed filters; saved reports; and presentation of report data and photos. |
+| ธนนรินทร์ สายศรธนานันต์ (Windsurf) | Fullstack | `app/report/page.jsx`; `app/my-posts/`; `lib/actions/item-photos.js`; `components/OwnerPostActions.jsx`; `components/ResolveItemButton.jsx`; `components/SiteHeader.jsx` | Connected report creation and photo processing, protected report flow, owner dashboard, owner edit/delete controls, and signed-in profile navigation. |
+
+These are the main ownership areas; some integration files and shared styles were updated by more than one member.
 
 See [`member-work-file.md`](./member-work-file.md) for the detailed member checklist and project handoffs.
 
