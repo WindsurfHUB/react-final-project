@@ -2,7 +2,7 @@
 
 **Deadline:** October 9, 2026
 **Working period:** October 7–9, 2026
-**Current stack:** Next.js App Router, React, JavaScript/JSX, Supabase (PostgreSQL, Auth, Storage), and Sharp. Tailwind CSS is installed; the UI mainly uses project CSS. Leaflet/OpenStreetMap, React Hook Form, and Zod remain planned and are not currently implemented/dependencies.
+**Current stack:** Next.js App Router, React, JavaScript/JSX, Supabase (PostgreSQL, Auth, Storage), Sharp, Leaflet/OpenStreetMap, React Hook Form, and Zod. Tailwind CSS is installed; the UI mainly uses project CSS.
 
 ## Instructions for any AI helping a team member
 
@@ -46,11 +46,11 @@ For a technical guard, the repository owner should protect `main` on GitHub so d
 - [x] The current production deployment is live at <https://react-campus-lost-and-found.vercel.app>.
 - [x] Proposal draft documents the four members, project stack, route plan, and initial database schema.
 
-## Current app status (`main`; PR #11 merged)
+## Current app status (`main`; PRs #11 and #12 merged)
 
-`main` includes PR #9 from Pond, the photo-display integration, and PR #11 from Windsurf. The home, listing, and detail pages read item rows through Supabase Server Components. `/items` has search and URL-backed filters; `/saved` uses browser `localStorage`; cards and details render a stored public photo URL when `image_path` exists. Login and registration call Supabase email/password Auth. The protected `/report` form calls the authenticated `createItem` Server Action, and the signed-in owner sees the resolve control. Optional images are validated in the browser, compressed with Sharp in the server action, uploaded to the public `item-photos` bucket, and their path is saved to `items.image_path`. `/my-posts` lists the signed-in user's posts and provides owner-only edit/delete controls; its server actions verify ownership and the database has an owner-only delete policy. The signed-in header avatar links to `/my-posts`, with an initial shown when the account has no avatar URL. The latest Vercel deployment status has not been confirmed after PR #11. The map remains a location-name placeholder without interactive pin selection. CMU single sign-on is not implemented.
+`main` includes PR #9 from Pond and PRs #11–12 from Windsurf and Nick. The home, listing, and detail pages read item rows through Supabase Server Components. `/items` has search and URL-backed filters; `/saved` uses browser `localStorage`; cards and details render a stored public photo URL when `image_path` exists. Login and registration use Supabase email/password Auth. The protected `/report` form now uses React Hook Form and Zod validation and includes an interactive Leaflet/OpenStreetMap picker that passes selected coordinates to `createItem`; the signed-in owner sees the resolve control. Optional images are validated in the browser, compressed with Sharp in the server action, uploaded to the public `item-photos` bucket, and their path is saved to `items.image_path`. `/my-posts` lists the signed-in user's posts and provides owner-only edit/delete controls; its server actions verify ownership and the database has an owner-only delete policy. The signed-in header avatar links to `/my-posts`, with an initial shown when the account has no avatar URL. Mobile navigation, skip links, Thai document language, and keyboard/accessibility improvements are included. The post-PR #12 Vercel production deployment is confirmed: the public home loads with the new navigation/skip link, and signed-out `/report` redirects to `/login`. CMU single sign-on is not implemented.
 
-**Verification record:** `npm run build` passed on the PR #11 changes with `/my-posts` included, and `git diff --check` passed. The owner-only item DELETE policy is applied to Supabase and was confirmed by a read-only policy query; the existing Storage DELETE policy is scoped to the user's folder. The owner confirmed the production URL above is live, but the latest Vercel deployment status after PR #11 has not been checked. A signed-in browser session was unavailable, and local HTTP checks could not connect from this environment, so auth redirects, report create/photo/resolve, owner edit/delete, and photo cleanup remain unverified end to end. Do not run `scripts/test-backend-audit.mjs` without approval: it creates an Auth account and performs database writes.
+**Verification record:** `npm run build` passes locally on the merged commit after installing its declared dependencies. PR #12 also reports a passing `git diff --check`, zero axe-core WCAG 2.1 A/AA and best-practice violations across nine routes, no horizontal overflow at 360, 375, 768, and 1440px, and browser checks for map selection, form validation, mobile-menu keyboard behavior, and skip-link focus. It reports successful signup, email confirmation, sign-in, and access to `/report` using a disposable account. The post-merge Vercel production site loads, and `/report` redirects signed-out visitors to `/login`. On Oct 10, a temporary text-only found report was created in production, displayed on its detail and owner pages, edited by its owner, marked resolved, and deleted through `/my-posts`; Supabase confirmed the resolved status and zero matching test rows after cleanup. Production photo upload returned `Failed to fetch` on two attempts, and no photo-backed report was created. Storage's public `item-photos` bucket and owner-folder INSERT/DELETE policies exist (the bucket allows JPEG). Photo upload and attached-photo cleanup remain unverified. The owner-only item DELETE policy is applied to Supabase and was previously confirmed by a read-only policy query. Do not run `scripts/test-backend-audit.mjs` without approval: it creates an Auth account and performs database writes.
 
 ## Handoff notifications
 
@@ -87,9 +87,9 @@ When the completed task unblocks another member, include a message like this at 
 
 - [x] **P0 · Oct 7–8:** Implement `/login` and `/register` with Supabase email/password Auth, required-field and password-length checks, pending feedback, inline errors, and signup confirmation feedback. Registration passes `full_name`.
 - [x] **P0 · Oct 8:** Provide the basic `/report` fields for lost/found type, title, category, description, date, location, and optional photo; the form is connected to Windsurf's Server Action.
-- [ ] **P1 · Oct 9:** Replace the static map placeholder with an interactive OpenStreetMap/Leaflet picker and pass the chosen latitude/longitude and location name into the report form.
-- [ ] **P1 · Oct 9:** Check keyboard use and phone-width layout; improve report validation if needed. Current report form uses native required-field validation, not Zod/React Hook Form.
-- [ ] **P0 · Oct 9:** Verify signup, email confirmation, and sign-in against the configured Supabase project; implementation is present, but the complete live flow has not been verified.
+- [x] **P1 · Oct 10:** Replace the static map placeholder with an interactive OpenStreetMap/Leaflet picker and pass selected latitude/longitude into the report action; keep the location-name field.
+- [x] **P1 · Oct 10:** Add Zod/React Hook Form validation and verify keyboard behavior and phone-width layout. PR #12 reports axe checks passing and no horizontal overflow at 360, 375, 768, and 1440px.
+- [x] **P0 · Oct 10:** Verify signup, email confirmation, sign-in, and access to `/report` against Supabase using a disposable account. No report/item records were created.
 
 ### ธนนรินทร์ สายศรธนานันต์ (Windsurf) — Fullstack
 
@@ -100,9 +100,9 @@ When the completed task unblocks another member, include a message like this at 
 - [x] **P1 · Oct 9:** Build a signed-in `/my-posts` page showing the current user's reports, with empty/loading states and links to each detail page. Production build passes.
 - [x] **P1 · Oct 9:** Add owner-only edit and delete controls for lost and found posts, with confirmation/error feedback, and connect them to owner-checked server operations. Code and the Supabase delete policy are in place; end-to-end use remains to be tested.
 - [x] **P1 · Oct 9:** Replace the signed-in header's login button with a profile avatar link to `/my-posts`; show the account image when provided and an initial as fallback. Merged in PR #11; production build passes.
-- [x] **P0 · Oct 9:** Verify signed-in report creation, photo upload/delete, and owner resolution end to end against Supabase. These paths are implemented but lack a completed live check.
-- [x] **P1 · Oct 9:** End-to-end verify the owner-posts flow, owner-only edit/delete, and cleanup of an attached photo after deploying the branch.
-- [x] **P0 · Oct 9:** Confirm the latest Vercel deployment opens anonymously; the owner reports the current production site is live.
+- [ ] **P0 · Oct 10:** Verify signed-in report creation, photo upload/delete, and owner resolution end to end against Supabase. Text-only report creation and owner resolution passed on production; photo upload failed twice with `Failed to fetch`, so the photo portion remains incomplete.
+- [ ] **P1 · Oct 10:** End-to-end verify the owner-posts flow, owner-only edit/delete, and cleanup of an attached photo against the latest deployment. Owner listing, edit, and delete passed; attached-photo cleanup remains unverified because photo upload failed.
+- [x] **P0 · Oct 10:** Confirm the post-PR #12 Vercel production site opens anonymously and redirects signed-out `/report` visitors to `/login`.
 - [ ] **P0 · Oct 9:** Coordinate final smoke-check results and share the production URL, repository link, and any remaining checkpoint limitation with the group.
 
 ## Shared database outline
@@ -135,12 +135,11 @@ When the completed task unblocks another member, include a message like this at 
 
 Saved reports remain in browser `localStorage` for this version, so they do not need a database table.
 
-## Remaining work in execution order (October 9)
+## Remaining work in execution order (October 10)
 
-1. **ณัฐกรณ์ (Pond):** Check the `/my-posts` avatar navigation and owner dashboard, plus the existing list/detail/saved/photo UI, at phone and desktop widths.
-2. **ณภัทร (Nick):** Verify signup, email confirmation, and sign-in against Supabase; finish the map picker if time remains.
-3. **ธนนรินทร์ (Windsurf), with Titan:** After confirming the latest main deployment, use a signed-in account to verify `/my-posts`, owner edit/delete, report creation, photo upload/cleanup, and owner resolution. Do not run the backend audit script without explicit approval because it mutates data.
-4. **ธนนรินทร์ (Windsurf):** Confirm the latest Vercel deployment after PR #11 and share the production URL, repository link, smoke-check results, and remaining limitations with the group.
+1. **ณัฐกรณ์ (Pond):** Complete the final visual check of navigation and responsive layouts at phone and desktop widths; the owner dashboard and avatar navigation check is already marked complete.
+2. **ธนนรินทร์ (Windsurf), with Titan:** After confirming the latest main deployment, use a signed-in account to verify report creation, photo upload/deletion, owner resolution, and `/my-posts` edit/delete/photo cleanup. Production text-only creation, owner edit/delete, and resolution passed; photo upload failed with `Failed to fetch`, so photo cleanup remains unverified. Do not run the backend audit script without explicit approval because it mutates data.
+3. **ธนนรินทร์ (Windsurf):** Complete the signed-in smoke test after the test account is available, then share the production URL, repository link, results, and remaining limitations with the group.
 
 ## Checkpoint acceptance checklist
 
