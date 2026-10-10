@@ -23,7 +23,7 @@ A campus web app where students and staff can report lost or found items, search
 ## Planned technology
 
 - Next.js App Router and React
-- JavaScript with JSX (`.js` / `.jsx`), following the course starter; no TypeScript or TSX
+- JavaScript with JSX (`.js` / `.jsx`), following the course starter
 - Tailwind CSS
 - Supabase Database (PostgreSQL), Auth, and Storage
 - React Hook Form and Zod for form handling and validation
