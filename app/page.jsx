@@ -40,9 +40,33 @@ export default async function HomePage() {
         </section>
 
         <section className="container trust-strip" aria-label="ภาพรวมตัวอย่าง">
-          <div className="trust-item"><span className="trust-icon">⌕</span><span><b>ค้นหาได้ในที่เดียว</b><span>แยกตามประเภทและหมวดหมู่</span></span></div>
-          <div className="trust-item"><span className="trust-icon">⌖</span><span><b>ระบุตำแหน่งได้</b><span>เห็นจุดที่พบหรือทำหายบนแผนที่</span></span></div>
-          <div className="trust-item"><span className="trust-icon">♡</span><span><b>ช่วยกันส่งคืน</b><span>ติดตามประกาศจนกว่าจะได้คืน</span></span></div>
+          <div className="trust-item">
+            <span className="trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="10.8" cy="10.8" r="6.8" />
+                <path d="m16 16 4.2 4.2" />
+              </svg>
+            </span>
+            <span><b>ค้นหาได้ในที่เดียว</b><span>แยกตามประเภทและหมวดหมู่</span></span>
+          </div>
+          <div className="trust-item">
+            <span className="trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+            </span>
+            <span><b>ระบุตำแหน่งได้</b><span>เห็นจุดที่พบหรือทำหายบนแผนที่</span></span>
+          </div>
+          <div className="trust-item">
+            <span className="trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.2a4.8 4.8 0 0 1 8.8 2.6Z" />
+                <path d="M8.5 12h7" />
+              </svg>
+            </span>
+            <span><b>ช่วยกันส่งคืน</b><span>ติดตามประกาศจนกว่าจะได้คืน</span></span>
+          </div>
         </section>
 
         <section className="container section">

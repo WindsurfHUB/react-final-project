@@ -126,8 +126,10 @@ The `.env*` files are ignored except `.env.example`. Never commit `.env.local` o
 
 ## Vercel environment verification
 
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 
 ## Production console and hydration check
 
+On Oct 10, 2026, a read-only browser check of `/`, `/items`, `/saved`, `/login`, `/register`, `/report`, and `/my-posts` found no browser-console errors or warnings, including no hydration messages. Direct navigation and refresh on `/` and `/items` loaded without a 404. This does not replace the final check on a phone using the classroom Wi-Fi.
 
 ## Final classroom-network verification
