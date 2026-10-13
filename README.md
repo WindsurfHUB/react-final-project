@@ -119,19 +119,20 @@ The `.env*` files are ignored except `.env.example`. Never commit `.env.local` o
 
 ## sitemap.xml
 
+Next.js generates `/sitemap.xml` from [`app/sitemap.js`](./app/sitemap.js). It lists the public home and item-list pages; private and user-specific pages are excluded. Set `NEXT_PUBLIC_SITE_URL` to the canonical production origin when using a domain other than the current Vercel URL.
 
 ## robots.txt
 
+Next.js generates `/robots.txt` from [`app/robots.js`](./app/robots.js). Crawlers may access public pages; `/api/`, `/my-posts`, `/report`, and `/saved` are disallowed. The file also points crawlers to the sitemap. These crawler rules are not an access-control mechanism; authentication and database policies protect private data.
 
 ## Client-side global state
 
+Saved report IDs are client-side state managed by `useSavedItems` in [`lib/saved-items.js`](./lib/saved-items.js) and persisted in the browser's `localStorage`. This state is browser-specific and is not synced to a user account. The app does not currently use a centralized React Context or state library; if the course requirement expects a shared in-memory global store, this item still needs implementation.
 
 ## Vercel environment verification
 
-`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+The Vercel project settings showed `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` configured for Production and Preview. Values are intentionally omitted from this README. Confirm these settings again in Vercel if an environment variable changes.
 
 ## Production console and hydration check
 
-On Oct 10, 2026, a read-only browser check of `/`, `/items`, `/saved`, `/login`, `/register`, `/report`, and `/my-posts` found no browser-console errors or warnings, including no hydration messages. Direct navigation and refresh on `/` and `/items` loaded without a 404. This does not replace the final check on a phone using the classroom Wi-Fi.
-
-## Final classroom-network verification
+On Oct 10, 2026, a read-only browser check of `/`, `/items`, `/saved`, `/login`, `/register`, `/report`, and `/my-posts` found no browser-console errors or warnings, including no hydration messages. Direct navigation and refresh on `/` and `/items` loaded without a 404. This check did not cover every authenticated flow or a phone on the classroom network.
